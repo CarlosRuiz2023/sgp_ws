@@ -11,7 +11,7 @@ import { AppRouting } from "./routing/app-routing";
 import { UtilFecha } from "./utils/UtilFecha";
 import swaggerUI from "swagger-ui-express";
 import { SwaggerInterface } from "./config/swagger/swagger-interface";
-import { createConnections } from "./db/connection";
+import { initConnections } from "./db/connection";
 
 const _UtilFecha = new UtilFecha();
 const environment = Environment();
@@ -25,32 +25,12 @@ var _SwaggerInterface = new SwaggerInterface();
   //VARIABLE GLOBAL PARA UTILIZAR EN NUESTRA APLICACION
   global.ENVGLOBAL = ENV;
 
+  await initConnections();
+
   var CORS_WHITE_LIST = ENV.API.CORS.split(',');
 
   //INSTANCIAMOS EL SERVIDOR
   const www = ServerConfig.getInstance(ENV);
-
-  const {
-    dbPostgres,
-    dbAccess,
-    conectarBDSQLServer,
-  } = createConnections(ENV);
-
-  try {
-    await dbPostgres.authenticate();
-    console.log("Database Postgresql online");
-  } catch (error) {
-    console.error("Postgres error:", error);
-  }
-
-  try {
-    await dbAccess.query('SELECT 1+1 AS result');
-    console.log("Database Access online");
-  } catch (error) {
-    console.error("Access error:", error);
-  }
-
-  conectarBDSQLServer();
 
   //CARGAMOS CONFIGURACIONES
   www.api.use(Express.json());
@@ -75,7 +55,7 @@ var _SwaggerInterface = new SwaggerInterface();
   www.api.use(cors(options));
 
   //CARGA DE RUTAS
-  www.api.use('/v1', AppRouting);
+  www.api.use('/api', AppRouting);
 
   // SWAGGER
   www.api.use('/swagger', swaggerUI.serve),

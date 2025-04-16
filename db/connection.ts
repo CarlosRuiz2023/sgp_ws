@@ -1,55 +1,64 @@
+// src/db/connection.ts
 import { Sequelize } from 'sequelize';
 const ADODB = require('node-adodb');
 const path = require('path');
 const sql = require('mssql');
 
-function createConnections(ENV: any) {
-  console.log(process.env);
-  const pathAccess = ENV.ACCESS.HOST || 'C:/Fidoc/obrasdb992007.accdb';
+declare var ENVGLOBAL: any;
+
+let dbPostgres: Sequelize;
+let dbAccess: any;
+let configSQLServer: any;
+
+const initConnections = async () => {
+
+  const pathAccess = ENVGLOBAL.ACCESS.HOST || 'C:/Fidoc/obrasdb992007.accdb';
   const dbPath = path.join(pathAccess);
 
-  const dbPostgres = new Sequelize({
+  dbPostgres = new Sequelize({
     dialect: "postgres",
-    host: ENV.POSTGRESQL.HOST,
-    port: Number(ENV.POSTGRESQL.PORT) || 5432,
-    database: ENV.POSTGRESQL.DATABASE,
-    username: ENV.POSTGRESQL.USER_NAME,
-    password: ENV.POSTGRESQL.USER_PASSWORD,
+    host: ENVGLOBAL.POSTGRESQL.HOST || 'localhost',
+    port: Number(ENVGLOBAL.POSTGRESQL.PORT) || 5432,
+    database: ENVGLOBAL.POSTGRESQL.DATABASE || 'gisfidoc',
+    username: ENVGLOBAL.POSTGRESQL.USER_NAME || 'postgres',
+    password: ENVGLOBAL.POSTGRESQL.USER_PASSWORD || 'root',
   });
 
-  const configSQLServer = {
-    user: ENV.SQL.USER_NAME,
-    password: ENV.SQL.USER_PASSWORD,
-    server: ENV.SQL.HOST,
-    database: ENV.SQL.DATABASE,
+  configSQLServer = {
+    user: ENVGLOBAL.SQL.USER_NAME,
+    password: ENVGLOBAL.SQL.USER_PASSWORD,
+    server: ENVGLOBAL.SQL.HOST,
+    database: ENVGLOBAL.SQL.DATABASE,
     options: {
-      encrypt: false,
+      encrypt: ENVGLOBAL.SQL.ENCRYPT,
       trustServerCertificate: true
     }
   };
 
-  const dbAccess = ADODB.open(
-    `Provider=Microsoft.ACE.OLEDB.12.0;Jet OLEDB:Database Password=${ENV.ACCESS.USER_PASSWORD};Data Source=${dbPath};Persist Security Info=False;`,
+  dbAccess = ADODB.open(
+    `Provider=Microsoft.ACE.OLEDB.12.0;Jet OLEDB:Database Password=${ENVGLOBAL.ACCESS.USER_PASSWORD};Data Source=${dbPath};Persist Security Info=False;`,
     true
   );
 
-  async function conectarBDSQLServer() {
-    try {
-      await sql.connect(configSQLServer);
-      console.log("Database SQL Server online");
-      await sql.close();
-    } catch (err) {
-      console.error('Error de conexión:', err);
-      await sql.close();
-    }
+  console.log("Conexiones inicializadas correctamente.");
+};
+
+const conectarBDSQLServer = async () => {
+  try {
+    await sql.connect(configSQLServer);
+    console.log("Database SQL Server online");
+    await sql.close();
+  } catch (err) {
+    console.error('Error de conexión:', err);
+    await sql.close();
   }
+};
 
-  return {
-    dbPostgres,
-    dbAccess,
-    conectarBDSQLServer,
-    configSQLServer,
-  };
-}
-
-export { createConnections };
+export {
+  initConnections,
+  conectarBDSQLServer,
+  dbPostgres,
+  dbAccess,
+  configSQLServer,
+  sql
+};
