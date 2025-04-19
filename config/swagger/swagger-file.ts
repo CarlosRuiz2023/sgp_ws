@@ -1,6 +1,6 @@
-import { SwaggerDemoController } from "./controllers/swagger-demo.controller";
+import { SwaggerObraController } from "./controllers/swagger-obras.controller";
 
-var _SwaggerDemoController = new SwaggerDemoController();
+var _SwaggerObraController = new SwaggerObraController();
 
 export class SwaggerFile {
 
@@ -28,11 +28,23 @@ export class SwaggerFile {
                 "https"
             ],
             "tags": [
-                _SwaggerDemoController.tag
+                _SwaggerObraController.tag
             ],
-            
             "paths": {
-                '/demo/test':_SwaggerDemoController.getTest
+                "/obras/access": _SwaggerObraController.getObrasAccess,
+                "/obras/access/:obr_clv": _SwaggerObraController.getObraAccess,
+                "/obras/access/agregar": _SwaggerObraController.postObraAccess,
+                "/obras/access/actualizar": _SwaggerObraController.putObraAccess,
+                "/obras/access/estatus": _SwaggerObraController.putEstatusObraAccess,
+                "/obras/access/costo": _SwaggerObraController.putCostoObraAccess,
+                "/obras/access/eliminar": _SwaggerObraController.deleteObraAccess,
+                "/obras/sql": _SwaggerObraController.getObrasSql,
+                "/obras/sql/:obr_clv": _SwaggerObraController.getObraSql,
+                "/obras/sql/agregar": _SwaggerObraController.postObraSql,
+                "/obras/sql/actualizar": _SwaggerObraController.putObraSql,
+                "/obras/sql/estatus": _SwaggerObraController.putEstatusObraSql,
+                "/obras/sql/costo": _SwaggerObraController.putCostoObraSql,
+                "/obras/sql/eliminar": _SwaggerObraController.deleteObraSql
             },
             "externalDocs": {
                 "description": "Find out more about Swagger",

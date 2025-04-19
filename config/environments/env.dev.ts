@@ -64,4 +64,7 @@ export default {
     DATABASE: "asd",
     ENCRYPT: false
   },
+  PAGOS:{
+    HOST: "http://localhost:49947",
+  }
 };

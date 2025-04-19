@@ -11,12 +11,14 @@ import { AppRouting } from "./routing/app-routing";
 import { UtilFecha } from "./utils/UtilFecha";
 import swaggerUI from "swagger-ui-express";
 import { SwaggerInterface } from "./config/swagger/swagger-interface";
-import { initConnections } from "./db/connection";
+import { initConnections } from "./config/db/connection";
+import { Cron as CustomCron } from "./cron/cron";
 
 const _UtilFecha = new UtilFecha();
 const environment = Environment();
 const color = Colors();
 var _SwaggerInterface = new SwaggerInterface();
+const Cron = new CustomCron();
 
 (async () => {
 
@@ -57,9 +59,12 @@ var _SwaggerInterface = new SwaggerInterface();
   //CARGA DE RUTAS
   www.api.use('/api', AppRouting);
 
+  // Carga la documentación Swagger antes de definir la ruta
+  const swaggerJson = await _SwaggerInterface.loadConfigFile();
+
   // SWAGGER
-  www.api.use('/swagger', swaggerUI.serve),
-  www.api.get('/swagger', swaggerUI.setup(_SwaggerInterface.loadConfigFile().then((x:any)=>{return x}))),
+  www.api.use('/swagger', swaggerUI.serve);
+  www.api.get('/swagger/v1', swaggerUI.setup(swaggerJson));
 
   // info route
   www.api.get('/', (req: any, res: any) => {
@@ -78,9 +83,11 @@ var _SwaggerInterface = new SwaggerInterface();
   www.start(() => {
 
     if (ENV.API.ENVIRONMENT == 'DEV' || ENV.API.ENVIRONMENT == 'LOCAL') {
-      console.log(`Testear ruta: http://localhost:${ENV.API.PORT} , http://localhost:${ENV.API.PORT}/v1/demo/test` , `http://localhost:${ENV.API.PORT}/v1/swagger/`);
+      console.log(`Testear ruta: http://localhost:${ENV.API.PORT} , http://localhost:${ENV.API.PORT}/v1/demo/test`, `http://localhost:${ENV.API.PORT}/v1/swagger/`);
     }
 
   });
 
 })();
+
+Cron.iniciarCron();

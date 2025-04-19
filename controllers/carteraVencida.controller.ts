@@ -1,4 +1,4 @@
-import { configSQLServer, dbAccess, sql } from "../db/connection";
+import { configSQLServer, sql } from "../config/db/connection";
 import { ApiLogsService } from "../services/api_logs.service";
 const _ApiLogService = new ApiLogsService();
 

@@ -1,6 +1,8 @@
-import { configSQLServer, dbAccess, sql } from "../db/connection";
+import { configSQLServer, dbAccess, sql } from "../config/db/connection";
 import { ApiLogsService } from "../services/api_logs.service";
-import convertirFechaParaSQLServer from "../utils/fechas";
+import { UtilFecha } from "../utils/UtilFecha";
+
+const _UtilFecha = new UtilFecha();
 const _ApiLogService = new ApiLogsService();
 
 export class CooperadorController {
@@ -83,7 +85,7 @@ export class CooperadorController {
     const params = await data;
     const { coo_clv, coo_pat, coo_mat, coo_nom, coo_num: coo_nof, coo_call, coo_col, coo_cp, coo_tel, coo_npag, coo_venc1, coo_mts, coo_pred } = params;
     let cooperador = null;
-    const fechaVencimientoSQL = convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
+    const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
     // Crear request con parámetros
@@ -159,7 +161,7 @@ export class CooperadorController {
       request.input('COLONIA', sql.VarChar, coo_col);
       request.input('SISTEMA', sql.VarChar, obra.recordset[0].obr_sis);
       request.input('PROGRAMA', sql.VarChar, programa);
-      request.input('ULTIMA_FECHA_PAGO', sql.DateTime, convertirFechaParaSQLServer(`${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`));
+      request.input('ULTIMA_FECHA_PAGO', sql.DateTime, _UtilFecha.convertirFechaParaSQLServer(`${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`));
       request.input('OBR_FECHA', sql.DateTime, obra.recordset[0].obr_fecha);
 
       // Ejecutar consulta con parámetros
@@ -187,7 +189,7 @@ export class CooperadorController {
     const params = await data;
     const { coo_clv, coo_pat, coo_mat, coo_nom, coo_nof, coo_call, coo_num, coo_col, coo_cp, coo_tel, coo_npag, coo_venc1, coo_mts, coo_pred } = params;
     let cooperador = null;
-    const fechaVencimientoSQL = convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
+    const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
 

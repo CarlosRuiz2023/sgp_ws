@@ -34,7 +34,7 @@ export default {
     ENVIRONMENT: "LOCAL",
     TITLE: "API",
     HOST: 'localhost:3500',
-    BASE_PATH: '/v1',
+    BASE_PATH: '/api',
     EMAIL: 'example@leon.gob.mx'
   },
 
@@ -60,4 +60,7 @@ export default {
     DATABASE: "pfidoc",
     ENCRYPT: false
   },
+  PAGOS:{
+    HOST: "http://localhost:49947",
+  }
 };

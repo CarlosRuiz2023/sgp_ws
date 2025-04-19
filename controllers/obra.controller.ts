@@ -1,6 +1,8 @@
-import { configSQLServer, dbAccess, sql } from "../db/connection";
+import { configSQLServer, dbAccess, sql } from "../config/db/connection";
 import { ApiLogsService } from "../services/api_logs.service";
-import convertirFechaParaSQLServer from "../utils/fechas";
+import { UtilFecha } from "../utils/UtilFecha";
+
+const _UtilFecha = new UtilFecha();
 const _ApiLogService = new ApiLogsService();
 
 export class ObraController {
@@ -115,9 +117,9 @@ export class ObraController {
     const params = await data;
     const { obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_tramo, obr_fecha, obr_sis, col_nom, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob } = params;
     let obra = null;
-    const fechaObraSQL = convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
-    const fechaInicioSQL = convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
-    const fechaVencimientoSQL = convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
+    const fechaObraSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
+    const fechaInicioSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
+    const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
     // Crear request con parámetros
@@ -164,9 +166,9 @@ export class ObraController {
     const { obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_tramo, obr_fecha, obr_sis, col_nom, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob } = params;
     let obra = null;
 
-    const fechaObraSQL = convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
-    const fechaInicioSQL = convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
-    const fechaVencimientoSQL = convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
+    const fechaObraSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
+    const fechaInicioSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
+    const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
 
     // Conectar a la base de datos
     await sql.connect(configSQLServer);

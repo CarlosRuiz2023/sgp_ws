@@ -61,4 +61,7 @@ export default {
     DATABASE: "pfidoc",
     ENCRYPT: false
   },
+  PAGOS:{
+    HOST: "http://localhost:49947",
+  }
 };

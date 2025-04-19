@@ -71,4 +71,7 @@ export default {
     DATABASE: process.env.PROD_SQL_DATABASE,
     ENCRYPT: _UtilBoolean.toBoolean(process.env.PROD_SQL_ENCRYPT),
   },
+  PAGOS:{
+    HOST: "http://localhost:49947",
+  }
 };

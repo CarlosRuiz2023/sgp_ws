@@ -2,10 +2,10 @@ import { Router } from 'express';
 const api: Router = Router();
 
 import { CarteraVencidaInterface } from '../interfaces/carteraVencida.interface';
-import { AuthMiddleware } from '../middleware/auth.middleware';
+import { CarteraVencidaMiddleware } from '../middleware/carteraVencida.middleware';
 const CARTERA_VENCIDA_INTERFACE = new CarteraVencidaInterface();
-const AUTH_MIDDLEWARE = new AuthMiddleware();
+const CATRERA_VENNCIDA_MIDDLEWARE = new CarteraVencidaMiddleware();
 
-api.put('/', CARTERA_VENCIDA_INTERFACE.actualizarCarteraVencidaSql);
+api.put('/', CATRERA_VENNCIDA_MIDDLEWARE.validarCV_saldosin,CATRERA_VENNCIDA_MIDDLEWARE.validarCV_saldocon,CATRERA_VENNCIDA_MIDDLEWARE.validarCV_incremento,CATRERA_VENNCIDA_MIDDLEWARE.validarCV_pred,CARTERA_VENCIDA_INTERFACE.actualizarCarteraVencidaSql);
 
 export default api;
