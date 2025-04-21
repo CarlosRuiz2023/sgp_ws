@@ -126,7 +126,11 @@ export class CarteraVencidaMiddleware {
     public async validarCV_pred(req: Request, res: Response, next: NextFunction) {
         try {
 
-            const { cta_predial } = req.body;
+            let { cta_predial } = req.params;
+
+            if (cta_predial === undefined) {
+                cta_predial = req.body.cta_predial;
+            }
 
             if (cta_predial === undefined) {
                 res.status(400).json({

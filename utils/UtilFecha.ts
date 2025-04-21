@@ -32,6 +32,6 @@ export class UtilFecha {
         const anio = partes[2];
 
         // Reformatear como YYYY-MM-DD HH:MM:SS
-        return `${anio}-${mes}-${dia} 00:00:00.0000000`;
+        return `${anio}-${mes}-${dia} 00:00:00.000`;
     }
 }

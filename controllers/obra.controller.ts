@@ -1,4 +1,8 @@
+import { Sequelize } from "sequelize";
 import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { CarteraVencida } from "../models/carteraVencida.model";
+import { Cooperador } from "../models/cooperador.model";
+import { Obra } from "../models/obra.model";
 import { ApiLogsService } from "../services/api_logs.service";
 import { UtilFecha } from "../utils/UtilFecha";
 
@@ -7,8 +11,22 @@ const _ApiLogService = new ApiLogsService();
 
 export class ObraController {
   public async obtenerObrasAccess(data: any) {
-    const obras = await dbAccess.query('SELECT * FROM obra ORDER BY obr_fecha DESC');
-    return obras;
+    const params = await data;
+    const { limit, page } = params;
+    // Obtener todos los registros ordenados por fecha
+    const sql = `SELECT * FROM obra ORDER BY obr_fecha DESC`;
+    const allObras = await dbAccess.query(sql);
+
+    // Calcular el offset y aplicar paginación manual
+    const offset = (page - 1) * limit;
+    const paginated = allObras.slice(offset, offset + limit);
+
+    return {
+      total: allObras.length,
+      page,
+      limit,
+      obras: paginated
+    };
   }
 
   public async obtenerObraAccess(data: any) {
@@ -91,18 +109,46 @@ export class ObraController {
   }
 
   public async obtenerObrasSql(data: any) {
-    let obras = null;
+    const params = await data;
+    const { limit, page } = params;
+    const offset = (page - 1) * limit;
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
-    obras = await sql.query(`SELECT * FROM [pFidoc].[dbo].[obra] ORDER BY obr_fecha DESC`);
+    /* await sql.connect(configSQLServer);
+    // Obtener el total de registros
+    const totalResult = await sql.query(`
+      SELECT COUNT(*) as total FROM [pFidoc].[dbo].[obra]
+    `);
+    const total = totalResult.recordset[0].total;
+    const result = await sql.query(`
+      SELECT * FROM [pFidoc].[dbo].[obra]
+      ORDER BY obr_fecha DESC
+      OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY;
+    `);
     await sql.close();
-    return obras.recordsets[0];
+    return {
+      total,
+      page,
+      limit,
+      obras: result.recordset
+    }; */
+    const { count: total, rows: obras } = await Obra.findAndCountAll({
+      limit,
+      offset,
+      order: [['obr_fecha', 'DESC']]
+    });
+
+    return {
+      total,
+      page,
+      limit,
+      obras
+    };
   }
 
   public async obtenerObraSql(data: any) {
     const params = await data;
     const { obr_clv } = params;
-    let obra = null;
+    /* let obra = null;
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
     const request = new sql.Request();
@@ -110,18 +156,19 @@ export class ObraController {
     // Ejecutar consulta con parámetros
     obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
     await sql.close();
-    return obra.recordset[0];
+    return obra.recordset[0]; */
+    const obra = await Obra.findOne({ where: { obr_clv } });
+    return obra;
   }
 
   public async agregarObraSql(data: any) {
     const params = await data;
     const { obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_tramo, obr_fecha, obr_sis, col_nom, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob } = params;
-    let obra = null;
     const fechaObraSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
     const fechaInicioSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
     const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
     // Crear request con parámetros
     const request = new sql.Request();
     request.input('obr_clv', sql.VarChar, obr_clv);
@@ -158,20 +205,38 @@ export class ObraController {
       // Ejecutar consulta con parámetros
       obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
     }
-    return obra.recordset[0];
+    return obra.recordset[0]; */
+    const obra = await Obra.create({
+      obr_clv,
+      obr_call,
+      obr_col,
+      obr_cost,
+      obr_stat,
+      obr_int: '00:00:00.0000000',
+      obr_tramo,
+      obr_fecha: fechaObraSQL,
+      obr_sis,
+      col_nom,
+      obr_digito: 0,
+      obr_programa,
+      fechaInicioSQL,
+      fechaVencimientoSQL,
+      obr_npago,
+      obr_opergob
+    });
+    return obra;
   }
 
   public async actualizarObraSql(data: any) {
     const params = await data;
     const { obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_tramo, obr_fecha, obr_sis, col_nom, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob } = params;
-    let obra = null;
 
     const fechaObraSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecha); // '2025-04-03'
     const fechaInicioSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecinip); // '2025-04-03'
     const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(obr_fecvenp); // '2025-06-12'
 
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
 
     // Crear request con parámetros
     const request = new sql.Request();
@@ -215,15 +280,36 @@ export class ObraController {
       // Ejecutar consulta con parámetros
       obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
     }
-    return obra.recordset[0];
+    return obra.recordset[0]; */
+    let obra = null;
+    const result = await Obra.update({
+      obr_call,
+      obr_col,
+      obr_cost,
+      obr_stat,
+      obr_tramo,
+      fechaObraSQL,
+      obr_sis,
+      col_nom,
+      obr_programa,
+      fechaInicioSQL,
+      fechaVencimientoSQL,
+      obr_npago,
+      obr_opergob
+    }, {
+      where: { obr_clv }
+    });
+    if(result[0]==1){
+      obra = await Obra.findOne({ where: { obr_clv } });
+    }
+    return obra;
   }
 
   public async actualizarEstatusObraSql(data: any) {
     const params = await data;
     const { obr_clv, obr_stat, obr_opergob } = params;
-    let obra = null;
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
 
     // Crear request con parámetros
     const request = new sql.Request();
@@ -260,16 +346,34 @@ export class ObraController {
       obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
 
     }
-    return obra.recordset[0];
+    return obra.recordset[0]; */
+    let obra = null;
+    const result = await Obra.update({
+      obr_stat,
+      obr_opergob
+    }, {
+      where: { obr_clv }
+    });
+    if (obr_stat == '8') {
+      await CarteraVencida.update({
+        SALDOSIN: 0,
+        SALDOCON: 0
+      }, {
+        where: { OBRA: obr_clv }
+      });
+    }
+    if(result[0]==1){
+      obra = await Obra.findOne({ where: { obr_clv } });
+    }
+    return obra;
   }
 
   public async actualizarCostoObraSql(data: any) {
     const params = await data;
     const { obr_clv, obr_inc } = params;
-    let obra = null;
 
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
 
     // Crear request con parámetros
     const request = new sql.Request();
@@ -303,14 +407,36 @@ export class ObraController {
       // Ejecutar consulta con parámetros
       obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
     }
-    return obra.recordset[0];
+    return obra.recordset[0]; */
+    let obra = null;
+    const result = await Obra.update({
+      obr_inc
+    }, {
+      where: { obr_clv }
+    });
+    await Cooperador.update({
+      coo_inc: obr_inc
+    }, {
+      where: { coo_obr: obr_clv }
+    });
+    await CarteraVencida.update({
+      INCREMENTO_OBRA: obr_inc,
+      COO_INC: obr_inc,
+      SALDOSIN: Sequelize.literal(`[SALDOSIN] - [SALDOSIN] + ${obr_inc}`),
+      SALDOCON: Sequelize.literal(`[SALDOCON] - [SALDOCON] + ${obr_inc}`)
+    }, {
+      where: { OBRA: obr_clv }
+    });
+    if(result[0]==1){
+      obra = await Obra.findOne({ where: { obr_clv } });
+    }
+    return obra;
   }
 
   public async eliminarObraSql(data: any) {
     const params = await data;
     const { obr_clv } = params;
-    let obra = null;
-    let message = '';
+    /* let message = '';
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
 
@@ -326,6 +452,14 @@ export class ObraController {
     } else {
       message = 'No se elimino la obra correctamente.'
     }
-    return message;
+    return message; */
+    const obra = await Obra.destroy({
+      where: { obr_clv }
+    });
+    if (obra > 0) {
+      return 'Obra eliminada exitosamente.';
+    } else {
+      return 'No se elimino la obra correctamente.'
+    }
   }
 }

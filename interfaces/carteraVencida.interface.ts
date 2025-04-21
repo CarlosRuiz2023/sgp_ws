@@ -5,6 +5,19 @@ const _UtilRequest = new UtilRequest();
 const _CARTERA_VENCIDA_CONTROLLER = new CarteraVencidaController();
 
 export class CarteraVencidaInterface {
+    public async obtenerCarteraVencidaSql(req: Request, res: Response) {
+        try {
+            var params = _UtilRequest.getParams(req);
+            let resultado = await _CARTERA_VENCIDA_CONTROLLER.obtenerCarteraVencida(params);
+            return res.status(200).json({
+                success: true,
+                data: resultado
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ success: false, data: null });
+        }
+    }
     public async actualizarCarteraVencidaSql(req: Request, res: Response) {
         try {
             var params = _UtilRequest.getParams(req);

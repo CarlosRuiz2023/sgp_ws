@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import { JwtService } from "../services/jwt.service";
 import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { Obra } from "../models/obra.model";
 const _JwtService = new JwtService();
 
 export class ObraMiddleware {
@@ -77,15 +78,9 @@ export class ObraMiddleware {
                 });
                 return;
             }
-
-            // Conectar a la base de datos
-            await sql.connect(configSQLServer);
-            // Crear request con parámetros
-            const request = new sql.Request();
-            request.input('obr_clv', sql.VarChar, obr_clv);
             // Ejecutar consulta con parámetros
-            const predial = await request.query(`SELECT * FROM [dbo].[obra] WHERE [obr_clv] = @obr_clv`)
-            if (predial.recordset.length == 0) {
+            const obra = await Obra.findOne({ obr_clv: obr_clv });
+            if (obra) {
                 res.status(400).json({
                     success: false,
                     result: null,
@@ -93,7 +88,6 @@ export class ObraMiddleware {
                 });
                 return;
             }
-            await sql.close();
 
             next();
 
@@ -175,14 +169,9 @@ export class ObraMiddleware {
                 return;
             }
 
-            // Conectar a la base de datos
-            await sql.connect(configSQLServer);
-            // Crear request con parámetros
-            const request = new sql.Request();
-            request.input('obr_clv', sql.VarChar, obr_clv);
             // Ejecutar consulta con parámetros
-            const predial = await request.query(`SELECT * FROM [dbo].[obra] WHERE [obr_clv] = @obr_clv`)
-            if (predial.recordset.length > 0) {
+            const obra = await Obra.findOne({ obr_clv: obr_clv });
+            if (obra) {
                 res.status(400).json({
                     success: false,
                     result: null,
@@ -190,7 +179,6 @@ export class ObraMiddleware {
                 });
                 return;
             }
-            await sql.close();
 
             next();
 

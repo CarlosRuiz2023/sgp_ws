@@ -1,4 +1,8 @@
 import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { CarteraVencida } from "../models/carteraVencida.model";
+import { Cooperador } from "../models/cooperador.model";
+import { Obra } from "../models/obra.model";
+import { Programa } from "../models/programa.model";
 import { ApiLogsService } from "../services/api_logs.service";
 import { UtilFecha } from "../utils/UtilFecha";
 
@@ -70,7 +74,7 @@ export class CooperadorController {
   public async obtenerCooperadorSql(data: any) {
     const params = await data;
     const { coo_clv } = params;
-    let cooperador = null;
+    /* let cooperador = null;
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
     const request = new sql.Request();
@@ -78,16 +82,22 @@ export class CooperadorController {
     // Ejecutar consulta con parámetros
     cooperador = await request.query(`SELECT * FROM [pFidoc].[dbo].[cooperador] WHERE [coo_clv] = @coo_clv`);
     await sql.close();
-    return cooperador.recordset[0];
+    return cooperador.recordset[0]; */
+    let cooperador = null;
+    if (coo_clv.length == 13) {
+      cooperador = await Cooperador.findOne({ where: { coo_clv: coo_clv } });
+    } else {
+      cooperador = await Cooperador.findOne({ where: { coo_obr: coo_clv } });
+    }
+    return cooperador;
   }
 
   public async agregarCooperadorSql(data: any) {
     const params = await data;
     const { coo_clv, coo_pat, coo_mat, coo_nom, coo_num: coo_nof, coo_call, coo_col, coo_cp, coo_tel, coo_npag, coo_venc1, coo_mts, coo_pred } = params;
-    let cooperador = null;
     const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
     // Crear request con parámetros
     const request = new sql.Request();
     request.input('coo_clv', sql.VarChar, coo_clv);
@@ -182,16 +192,80 @@ export class CooperadorController {
 
       cooperador = await request.query(`SELECT * FROM [pFidoc].[dbo].[cooperador] WHERE [coo_clv] = @coo_clv`);
     }
-    return cooperador.recordset[0];
+    return cooperador.recordset[0]; */
+    const cooperador = await Cooperador.create({
+      coo_clv,
+      coo_pat,
+      coo_mat,
+      coo_nom,
+      coo_nof,
+      coo_call,
+      coo_col,
+      coo_cp,
+      coo_tel,
+      coo_npag,
+      coo_venc1: fechaVencimientoSQL,
+      coo_obr: coo_clv.substring(0, coo_clv.length - 3),
+      coo_mts,
+      coo_clv1: coo_clv.substring(coo_clv.length - 3),
+      coo_pred,
+      coo_nombre: coo_pat + " " + coo_mat + " " + coo_nom,
+      coo_cargos: 0.0,
+      coo_propx: 0,
+      coo_dec: 0.0,
+      coo_transferida: 0
+    });
+    const obra = await Obra.findOne({ where: { obr_clv: coo_clv.substring(0, coo_clv.length - 3) } });
+    if (cooperador && obra) {
+      let programa = '';
+      let programa_nombre = '';
+      if (obra.dataValues.obr_programa < 100) {
+        if (obra.dataValues.obr_programa < 10) {
+          programa = '00' + obra.dataValues.obr_programa;
+        } else {
+          programa = '0' + obra.dataValues.obr_programa;
+        }
+      } else {
+        programa = '' + obra.dataValues.obr_programa;
+      }
+      // Ejecutar consulta con parámetros
+      if (obra.dataValues.obr_programa != 0) {
+        const programaRecuperado = await Programa.findOne({ where: { pro_clv: programa } });
+        programa_nombre = programaRecuperado.dataValues.pro_nom;
+      }
+      const date = _UtilFecha.DateNow();
+      await CarteraVencida.create({
+        OBRA: coo_clv.substring(0, coo_clv.length - 3),
+        COOPERADOR: coo_clv,
+        SALDOSIN: (parseFloat(coo_mts) * Number(coo_mts * obra.dataValues.obr_cost)),
+        SALDOCON: (parseFloat(coo_mts) * Number(coo_mts * obra.dataValues.obr_cost)),
+        METROS_FRENTE: Number(coo_mts),
+        COSTO_METRO_LINEAL: parseFloat(obra.dataValues.obr_cost),
+        CTA_PREDIAL: coo_pred,
+        NOMBRE_COOPERADOR: cooperador.dataValues.coo_pat + " " + cooperador.dataValues.coo_mat + " " + cooperador.dataValues.coo_nom,
+        TIPO_LOTE: 'CASA HABITACION',
+        COO_INC: 0.0,
+        NUM_COOPS: Number(await Cooperador.count({ where: { coo_obr: coo_clv.substring(0, coo_clv.length - 3) } })),
+        TRAMO: obra.dataValues.obr_tramo,
+        CALLE: coo_call,
+        NO_OFICIAL: coo_nof,
+        COLONIA: coo_col,
+        SISTEMA: obra.dataValues.obr_sis,
+        PROGRAMA: programa_nombre,
+        TOTAL_PAGOS: 0.0,
+        ULTIMA_FECHA_PAGO: _UtilFecha.convertirFechaParaSQLServer(`${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`),
+        OBR_FECHA: _UtilFecha.convertirFechaParaSQLServer(`${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`)
+      })
+    }
+    return cooperador;
   }
 
   public async actualizarCooperadorSql(data: any) {
     const params = await data;
     const { coo_clv, coo_pat, coo_mat, coo_nom, coo_nof, coo_call, coo_num, coo_col, coo_cp, coo_tel, coo_npag, coo_venc1, coo_mts, coo_pred } = params;
-    let cooperador = null;
     const fechaVencimientoSQL = _UtilFecha.convertirFechaParaSQLServer(coo_venc1); // '2025-06-12'
     // Conectar a la base de datos
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
 
     // Crear request con parámetros
     const request = new sql.Request();
@@ -246,14 +320,42 @@ export class CooperadorController {
       // Ejecutar consulta con parámetros
       cooperador = await request.query(`SELECT * FROM [pFidoc].[dbo].[cooperador] WHERE [coo_clv] = @coo_clv`);
     }
-    return cooperador.recordset[0];
+    return cooperador.recordset[0]; */
+    const cooperador = await Cooperador.update({
+      coo_pat,
+      coo_mat,
+      coo_nom,
+      coo_nof,
+      coo_call,
+      coo_col,
+      coo_cp,
+      coo_tel,
+      coo_npag,
+      coo_venc1: fechaVencimientoSQL,
+      coo_mts: parseFloat(coo_mts),
+      coo_pred
+    }, { where: { coo_clv } });
+    await CarteraVencida.update({
+      NOMBRE_COOPERADOR: coo_pat + " " + coo_mat + " " + coo_nom,
+      CALLE: coo_call,
+      NO_OFICIAL: coo_nof,
+      COLONIA: coo_col,
+      METROS_FRENTE: parseFloat(coo_mts),
+      CTA_PREDIAL: coo_pred
+    }, { where: { COOPERADOR: coo_clv } });
+    if (cooperador[0] == 1) {
+      const cooperadorRecuperado = await Cooperador.findOne({ where: { coo_clv } });
+      return cooperadorRecuperado;
+    } else {
+      return 'No se ha actualizado el cooperador correctamente.';
+    }
   }
 
   public async eliminarCooperadorSql(data: any) {
     const params = await data;
     const { coo_clv } = params;
     let message = '';
-    await sql.connect(configSQLServer);
+    /* await sql.connect(configSQLServer);
 
     // Crear request con parámetros
     const request = new sql.Request();
@@ -266,6 +368,14 @@ export class CooperadorController {
     const result2 = await request.query(`DELETE FROM [dbo].[CARTERA_VENCIDA] WHERE [COOPERADOR] = @coo_clv`);
 
     if (result.rowsAffected[0] > 0 && result2.rowsAffected[0] > 0) {
+      message = 'Cooperador eliminado con exito.';
+    } else {
+      message = 'No se elimino al cooperador correctamente.'
+    }
+    return message; */
+    const cooperador = await Cooperador.destroy({ where: { coo_clv } });
+    await CarteraVencida.destroy({ where: { COOPERADOR: coo_clv } });
+    if (cooperador > 0) {
       message = 'Cooperador eliminado con exito.';
     } else {
       message = 'No se elimino al cooperador correctamente.'

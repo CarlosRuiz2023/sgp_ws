@@ -13,7 +13,7 @@ export class UtilCron {
             const date = new Date();
 
             // Configuración de la petición
-            const url = `${ENVGLOBAL.PAGOS.HOST}/WebServices/WebServicePagos.asmx/GetActPagosAS400`;
+            const url = `${global.ENVGLOBAL.PAGOS.HOST}/WebServices/WebServicePagos.asmx/GetActPagosAS400`;
             const headers = {
                 'Content-Type': 'application/json',
             };

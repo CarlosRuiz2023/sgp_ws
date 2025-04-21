@@ -2,6 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import { JwtService } from "../services/jwt.service";
 import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { Cooperador } from "../models/cooperador.model";
+import { Obra } from "../models/obra.model";
 const _JwtService = new JwtService();
 
 export class CooperadiresMiddleware {
@@ -131,14 +133,11 @@ export class CooperadiresMiddleware {
             }
 
             if (coo_clv.length == 10) {
-                // Conectar a la base de datos
-                await sql.connect(configSQLServer);
-                // Crear request con parámetros
-                const request = new sql.Request();
-                request.input('coo_clv', sql.VarChar, coo_clv);
+
+                const obra = await Obra.findOne({ coo_obr: coo_clv });
                 // Ejecutar consulta con parámetros
-                const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_obr] = @coo_clv`)
-                if (predial.recordset.length == 0) {
+                const predial = await Cooperador.findOne({ coo_clv: coo_clv });
+                if (predial && obra) {
                     res.status(400).json({
                         success: false,
                         result: null,
@@ -146,16 +145,10 @@ export class CooperadiresMiddleware {
                     });
                     return;
                 }
-                await sql.close();
             } else {
-                // Conectar a la base de datos
-                await sql.connect(configSQLServer);
-                // Crear request con parámetros
-                const request = new sql.Request();
-                request.input('coo_clv', sql.VarChar, coo_clv);
                 // Ejecutar consulta con parámetros
-                const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_clv] = @coo_clv`)
-                if (predial.recordset.length == 0) {
+                const predial = await Cooperador.findOne({ coo_clv: coo_clv });
+                if (predial) {
                     res.status(400).json({
                         success: false,
                         result: null,
@@ -163,7 +156,6 @@ export class CooperadiresMiddleware {
                     });
                     return;
                 }
-                await sql.close();
             }
 
             next();
@@ -245,23 +237,16 @@ export class CooperadiresMiddleware {
                 });
                 return;
             }
-
-            // Conectar a la base de datos
-            await sql.connect(configSQLServer);
-            // Crear request con parámetros
-            const request = new sql.Request();
-            request.input('coo_clv', sql.VarChar, coo_clv);
             // Ejecutar consulta con parámetros
-            const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_clv] = @coo_clv`)
-            if (predial.recordset.length == 0) {
+            const predial = await Cooperador.findOne({ coo_clv: coo_clv });
+            if (predial.recordset.length > 0) {
                 res.status(400).json({
                     success: false,
                     result: null,
-                    error: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
+                    error: "El coo_clv proporcionado ya existe dentro de la base de datos de SQL Server",
                 });
                 return;
             }
-            await sql.close();
 
             next();
 
@@ -746,6 +731,15 @@ export class CooperadiresMiddleware {
                     success: false,
                     result: null,
                     error: "El coo_pred debe de ser menor a 13 caracteres",
+                });
+                return;
+            }
+            const cooperadorExistente = await Cooperador.findOne({ coo_pred });
+            if (cooperadorExistente) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred ya se encurentra registrado en BD",
                 });
                 return;
             }
