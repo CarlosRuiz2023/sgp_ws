@@ -1,7 +1,8 @@
 import axios from "axios";
-import { configSQLServer, sql } from "../config/db/connection";
 import { UtilLogError } from "./UtilLogError";
-const UIL_LOG_ERROR = new UtilLogError();
+import { CarteraVencida } from "../models/carteraVencida.model";
+import { Sequelize } from "sequelize";
+const UTIL_LOG_ERROR = new UtilLogError();
 
 export class UtilCron {
 
@@ -29,9 +30,9 @@ export class UtilCron {
 
             // Realizar la petición POST con Axios
             const respuesta = await axios.post(url, datos, { headers });
-            if (respuesta.data.d != 'PAGOS ACTUALIZADOS CORRECTAMENTE') UIL_LOG_ERROR.escribirErrorEnLog('Error al actualizar los pagos :' + respuesta.data.d);
+            if (respuesta.data.d != 'PAGOS ACTUALIZADOS CORRECTAMENTE') UTIL_LOG_ERROR.escribirErrorEnLog('Error al actualizar los pagos :' + respuesta.data.d);
         } catch (error: any) {
-            UIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
         }
     };
 
@@ -91,11 +92,11 @@ export class UtilCron {
             const resultadosUnicos = Object.values(pagosUnicos);
 
             // Conectar a la base de datos
-            await sql.connect(configSQLServer);
+            //await sql.connect(configSQLServer);
             for (let index = 0; index < resultadosUnicos.length; index++) {
                 const pago: any = resultadosUnicos[index];
                 // Crear request con parámetros
-                const request = new sql.Request();
+                /* const request = new sql.Request();
                 request.input('IMPORTE', sql.Float, pago.importe);
                 request.input('COOPERADOR', sql.VarChar, pago.cooperador);
 
@@ -108,11 +109,20 @@ export class UtilCron {
                 `);
                 if (resp.rowsAffected[0] == 0) {
                     UIL_LOG_ERROR.escribirErrorEnLog("No se encontro el cooperador " + pago.cooperador + " en la cartera vencida de pFidoc, el cual dio un importe de " + pago.importe + " el dia de ayer.");
+                } */
+                const result = await CarteraVencida.update({
+                    SALDOSIN: Sequelize.literal(`[SALDOSIN] - [SALDOSIN] + ${pago.importe}`),
+                    SALDOCON: Sequelize.literal(`[SALDOCON] - [SALDOCON] + ${pago.importe}`)
+                }, {
+                    where: { COOPERADOR: pago.cooperador }
+                });
+                if (result[0] == 0) {
+                    UTIL_LOG_ERROR.escribirErrorEnLog(`No se encontro el cooperador ${pago.cooperador} en la cartera vencida de pFidoc, el cual dio un importe de ${pago.importe}el dia de ayer.`)
                 }
             }
-            await sql.close();
+            //await sql.close();
         } catch (error: any) {
-            UIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
         }
     };
 }

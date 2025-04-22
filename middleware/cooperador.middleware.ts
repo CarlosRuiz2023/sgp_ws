@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import { JwtService } from "../services/jwt.service";
-import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { dbAccess } from "../config/db/connection";
 import { Cooperador } from "../models/cooperador.model";
 import { Obra } from "../models/obra.model";
 const _JwtService = new JwtService();
@@ -703,7 +703,7 @@ export class CooperadiresMiddleware {
         }
     }
 
-    public async validarCoop_pred(req: Request, res: Response, next: NextFunction) {
+    public async validarCoop_predSql(req: Request, res: Response, next: NextFunction) {
         try {
 
             const { coo_pred } = req.body;
@@ -740,6 +740,94 @@ export class CooperadiresMiddleware {
                     success: false,
                     result: null,
                     error: "El coo_pred ya se encurentra registrado en BD",
+                });
+                return;
+            }
+
+            next();
+
+        } catch (error) {
+            console.log(error);
+            return res.status(404).send({ msg: 'Token no valido' });
+        }
+    }
+
+    public async validarCoop_predAccess(req: Request, res: Response, next: NextFunction) {
+        try {
+
+            const { coo_pred } = req.body;
+
+            if (coo_pred === undefined) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "Falto proporcionar el coo_pred",
+                });
+                return;
+            }
+
+            if (typeof coo_pred != "string") {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred proporcionado debe ser de tipo string",
+                });
+                return;
+            }
+
+            if (coo_pred.length > 12) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred debe de ser menor a 13 caracteres",
+                });
+                return;
+            }
+            const cooperadorExistente = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_pred = '${coo_pred}'`);
+            if (cooperadorExistente) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred ya se encurentra registrado en BD",
+                });
+                return;
+            }
+
+            next();
+
+        } catch (error) {
+            console.log(error);
+            return res.status(404).send({ msg: 'Token no valido' });
+        }
+    }
+    public async validarCoop_pred(req: Request, res: Response, next: NextFunction) {
+        try {
+
+            const { coo_pred } = req.body;
+
+            if (coo_pred === undefined) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "Falto proporcionar el coo_pred",
+                });
+                return;
+            }
+
+            if (typeof coo_pred != "string") {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred proporcionado debe ser de tipo string",
+                });
+                return;
+            }
+
+            if (coo_pred.length > 12) {
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "El coo_pred debe de ser menor a 13 caracteres",
                 });
                 return;
             }

@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize";
-import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { Op, Sequelize } from "sequelize";
+import { dbAccess } from "../config/db/connection";
 import { CarteraVencida } from "../models/carteraVencida.model";
 import { Cooperador } from "../models/cooperador.model";
 import { Obra } from "../models/obra.model";
@@ -12,12 +12,21 @@ const _ApiLogService = new ApiLogsService();
 export class ObraController {
   public async obtenerObrasAccess(data: any) {
     const params = await data;
-    const { limit, page } = params;
-    // Obtener todos los registros ordenados por fecha
-    const sql = `SELECT * FROM obra ORDER BY obr_fecha DESC`;
-    const allObras = await dbAccess.query(sql);
+    const { limit, page, filtro } = params;
+    let whereSQL = '';
 
-    // Calcular el offset y aplicar paginación manual
+    // Si se manda un número del 1 al 5 => es estatus
+    const estatusInt = parseInt(filtro);
+    if (!isNaN(estatusInt) && estatusInt >= 1 && estatusInt <= 5) {
+      whereSQL = `WHERE obr_stat = '${filtro}'`;
+    } else if (filtro) {
+      // Si se manda cualquier otro valor => búsqueda por calle
+      whereSQL = `WHERE obr_call LIKE '${filtro}'`;
+    }
+
+    const sql = `SELECT * FROM obra ${whereSQL} ORDER BY obr_fecha DESC`;
+
+    const allObras = await dbAccess.query(sql);
     const offset = (page - 1) * limit;
     const paginated = allObras.slice(offset, offset + limit);
 
@@ -110,7 +119,7 @@ export class ObraController {
 
   public async obtenerObrasSql(data: any) {
     const params = await data;
-    const { limit, page } = params;
+    const { limit, page, filtro } = params;
     const offset = (page - 1) * limit;
     // Conectar a la base de datos
     /* await sql.connect(configSQLServer);
@@ -131,7 +140,18 @@ export class ObraController {
       limit,
       obras: result.recordset
     }; */
+
+    const where:any = {};
+    const estatusInt = parseInt(filtro);
+
+    if (!isNaN(estatusInt) && estatusInt >= 1 && estatusInt <= 5) {
+      where.obr_stat = filtro;
+    } else if (filtro) {
+      where.obr_call = { [Op.like]: `%${filtro}%` };
+    }
+
     const { count: total, rows: obras } = await Obra.findAndCountAll({
+      where,
       limit,
       offset,
       order: [['obr_fecha', 'DESC']]
@@ -299,7 +319,7 @@ export class ObraController {
     }, {
       where: { obr_clv }
     });
-    if(result[0]==1){
+    if (result[0] == 1) {
       obra = await Obra.findOne({ where: { obr_clv } });
     }
     return obra;
@@ -362,7 +382,7 @@ export class ObraController {
         where: { OBRA: obr_clv }
       });
     }
-    if(result[0]==1){
+    if (result[0] == 1) {
       obra = await Obra.findOne({ where: { obr_clv } });
     }
     return obra;
@@ -427,7 +447,7 @@ export class ObraController {
     }, {
       where: { OBRA: obr_clv }
     });
-    if(result[0]==1){
+    if (result[0] == 1) {
       obra = await Obra.findOne({ where: { obr_clv } });
     }
     return obra;

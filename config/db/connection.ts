@@ -1,6 +1,6 @@
 const ADODB = require('node-adodb');
 const path = require('path');
-const sql = require('mssql');
+//const sql = require('mssql');
 
 import { Sequelize } from 'sequelize';
 import { ObraModel } from '../../models/obra.model';
@@ -11,7 +11,7 @@ import { ProgramaModel } from '../../models/programa.model';
 
 let dbPostgres: Sequelize;
 let dbAccess: any;
-let configSQLServer: any;
+//let configSQLServer: any;
 let dbSqlServer: Sequelize;
 
 const initConnections = async () => {
@@ -27,7 +27,7 @@ const initConnections = async () => {
     username: global.ENVGLOBAL.POSTGRESQL.USER_NAME || 'postgres',
     password: global.ENVGLOBAL.POSTGRESQL.USER_PASSWORD || 'root',
   });
-
+/* 
   configSQLServer = {
     user: global.ENVGLOBAL.SQL.USER_NAME,
     password: global.ENVGLOBAL.SQL.USER_PASSWORD,
@@ -37,7 +37,7 @@ const initConnections = async () => {
       encrypt: global.ENVGLOBAL.SQL.ENCRYPT,
       trustServerCertificate: true
     }
-  };
+  }; */
 
   dbAccess = ADODB.open(
     `Provider=Microsoft.ACE.OLEDB.12.0;Jet OLEDB:Database Password=${global.ENVGLOBAL.ACCESS.USER_PASSWORD};Data Source=${dbPath};Persist Security Info=False;`,
@@ -66,7 +66,7 @@ const initConnections = async () => {
   console.log("Conexiones inicializadas correctamente.");
 };
 
-const conectarBDSQLServer = async () => {
+/* const conectarBDSQLServer = async () => {
   try {
     await sql.connect(configSQLServer);
     console.log("Database SQL Server online");
@@ -75,14 +75,14 @@ const conectarBDSQLServer = async () => {
     console.error('Error de conexión:', err);
     await sql.close();
   }
-};
+}; */
 
 export {
   initConnections,
-  conectarBDSQLServer,
+  //conectarBDSQLServer,
   dbPostgres,
   dbAccess,
-  configSQLServer,
+  //configSQLServer,
   dbSqlServer,
-  sql
+  //sql
 };

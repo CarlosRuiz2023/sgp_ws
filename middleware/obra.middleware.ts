@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import { JwtService } from "../services/jwt.service";
-import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { dbAccess } from "../config/db/connection";
 import { Obra } from "../models/obra.model";
 const _JwtService = new JwtService();
 

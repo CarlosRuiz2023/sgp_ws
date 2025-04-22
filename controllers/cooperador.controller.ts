@@ -1,4 +1,4 @@
-import { configSQLServer, dbAccess, sql } from "../config/db/connection";
+import { dbAccess } from "../config/db/connection";
 import { CarteraVencida } from "../models/carteraVencida.model";
 import { Cooperador } from "../models/cooperador.model";
 import { Obra } from "../models/obra.model";

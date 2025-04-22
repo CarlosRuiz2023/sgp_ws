@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { configSQLServer, sql } from "../config/db/connection";
+import { CarteraVencida } from "../models/carteraVencida.model";
 
 export class CarteraVencidaMiddleware {
 
@@ -160,7 +160,7 @@ export class CarteraVencidaMiddleware {
             }
 
             // Conectar a la base de datos
-            await sql.connect(configSQLServer);
+            /* await sql.connect(configSQLServer);
             // Crear request con parámetros
             const request = new sql.Request();
             request.input('CTA_PREDIAL', sql.VarChar, cta_predial);
@@ -174,7 +174,16 @@ export class CarteraVencidaMiddleware {
                 });
                 return;
             }
-            await sql.close();
+            await sql.close(); */
+            const cartera = await CarteraVencida.findOne({ cta_predial: cta_predial })
+            if (!cartera){
+                res.status(400).json({
+                    success: false,
+                    result: null,
+                    error: "La cta_predial no se encuentra registrada en pFidoc",
+                });
+                return;
+            }
 
             next();
 
