@@ -1,9 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import moment from "moment";
-import { JwtService } from "../services/jwt.service";
 import { dbAccess } from "../config/db/connection";
 import { Obra } from "../models/obra.model";
-const _JwtService = new JwtService();
+import { UtilLogError } from "../utils/UtilLogError";
+const UTIL_LOG_ERROR = new UtilLogError();
 
 export class ObraMiddleware {
 
@@ -18,18 +17,20 @@ export class ObraMiddleware {
 
             if (obr_clv === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_clv",
+                    data: null,
+                    message: "Falto proporcionar la obr_clv",
                 });
                 return;
             }
 
             if (obr_clv.length != 10) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_clv debe de tener 10 digitos",
+                    data: null,
+                    message: "La obr_clv debe de tener 10 digitos",
                 });
                 return;
             }
@@ -37,18 +38,25 @@ export class ObraMiddleware {
             const obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
             if (obra.length === 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_clv proporcionado no existe dentro de la base de datos de Access",
+                    data: null,
+                    message: "El obr_clv proporcionado no existe dentro de la base de datos de Access",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_clvAccess: '+error.message
+            });
         }
     }
 
@@ -63,18 +71,20 @@ export class ObraMiddleware {
 
             if (obr_clv === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_clv",
+                    data: null,
+                    message: "Falto proporcionar la obr_clv",
                 });
                 return;
             }
 
             if (obr_clv.length != 10) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_clv debe de tener 10 digitos",
+                    data: null,
+                    message: "La obr_clv debe de tener 10 digitos",
                 });
                 return;
             }
@@ -82,18 +92,25 @@ export class ObraMiddleware {
             const obra = await Obra.findOne({ obr_clv: obr_clv });
             if (obra) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_clv proporcionado no existe dentro de la base de datos de SQL Server",
+                    data: null,
+                    message: "El obr_clv proporcionado no existe dentro de la base de datos de SQL Server",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_clvSql: '+error.message
+            });
         }
     }
 
@@ -108,18 +125,20 @@ export class ObraMiddleware {
 
             if (obr_clv === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_clv",
+                    data: null,
+                    message: "Falto proporcionar la obr_clv",
                 });
                 return;
             }
 
             if (obr_clv.length != 10) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_clv debe de tener 10 digitos",
+                    data: null,
+                    message: "La obr_clv debe de tener 10 digitos",
                 });
                 return;
             }
@@ -127,18 +146,25 @@ export class ObraMiddleware {
             const obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
             if (obra.length != 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_clv proporcionado ya existe dentro de la base de datos de Accesss",
+                    data: null,
+                    message: "El obr_clv proporcionado ya existe dentro de la base de datos de Accesss",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_clvNoExistenteAccess: '+error.message
+             });
         }
     }
 
@@ -153,18 +179,20 @@ export class ObraMiddleware {
 
             if (obr_clv === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_clv",
+                    data: null,
+                    message: "Falto proporcionar la obr_clv",
                 });
                 return;
             }
 
             if (obr_clv.length != 10) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_clv debe de tener 10 digitos",
+                    data: null,
+                    message: "La obr_clv debe de tener 10 digitos",
                 });
                 return;
             }
@@ -173,18 +201,25 @@ export class ObraMiddleware {
             const obra = await Obra.findOne({ obr_clv: obr_clv });
             if (obra) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_clv proporcionado ya existe dentro de la base de datos de SQL Server",
+                    data: null,
+                    message: "El obr_clv proporcionado ya existe dentro de la base de datos de SQL Server",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_clvNoExistenteSql: '+error.message
+             });
         }
     }
 
@@ -195,36 +230,45 @@ export class ObraMiddleware {
 
             if (obr_call === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_call",
+                    data: null,
+                    message: "Falto proporcionar la obr_call",
                 });
                 return;
             }
 
             if (typeof obr_call != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_call proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "La obr_call proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_call.length > 50) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_call debe de ser menor a 51 caracteres",
+                    data: null,
+                    message: "La obr_call debe de ser menor a 51 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_call: '+error.message
+             });
         }
     }
 
@@ -235,36 +279,45 @@ export class ObraMiddleware {
 
             if (obr_col === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_col",
+                    data: null,
+                    message: "Falto proporcionar la obr_col",
                 });
                 return;
             }
 
             if (typeof obr_col != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_col proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "La obr_col proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_col.length > 3) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_col debe de ser menor a 4 caracteres",
+                    data: null,
+                    message: "La obr_col debe de ser menor a 4 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_col: '+error.message
+             });
         }
     }
 
@@ -275,9 +328,10 @@ export class ObraMiddleware {
 
             if (obr_cost === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_cost",
+                    data: null,
+                    message: "Falto proporcionar la obr_cost",
                 });
                 return;
             }
@@ -285,27 +339,35 @@ export class ObraMiddleware {
             // Verifica que sea tipo número y no NaN
             if (typeof obr_cost !== "number" || isNaN(obr_cost)) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_cost proporcionado debe ser de tipo numérico",
+                    data: null,
+                    message: "El obr_cost proporcionado debe ser de tipo numérico",
                 });
                 return;
             }
 
             if (obr_cost <= 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_cost deben de ser un numero positivo mayor a 0",
+                    data: null,
+                    message: "El obr_cost deben de ser un numero positivo mayor a 0",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_cost: '+error.message
+             });
         }
     }
 
@@ -316,27 +378,30 @@ export class ObraMiddleware {
 
             if (obr_stat === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el obr_stat",
+                    data: null,
+                    message: "Falto proporcionar el obr_stat",
                 });
                 return;
             }
 
             if (typeof obr_stat != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_stat proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "La obr_stat proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_stat.length > 1) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_stat debe de ser 1 solo caracter",
+                    data: null,
+                    message: "La obr_stat debe de ser 1 solo caracter",
                 });
                 return;
             }
@@ -345,18 +410,25 @@ export class ObraMiddleware {
 
             if (estatus == null) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_stat inexistente dentro de la bd",
+                    data: null,
+                    message: "La obr_stat inexistente dentro de la bd",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_stat: '+error.message
+             });
         }
     }
 
@@ -367,36 +439,45 @@ export class ObraMiddleware {
 
             if (obr_tramo === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_tramo",
+                    data: null,
+                    message: "Falto proporcionar la obr_tramo",
                 });
                 return;
             }
 
             if (typeof obr_tramo != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_tramo proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "El obr_tramo proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_tramo.length > 70) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_tramo debe de ser menor a 71 caracteres",
+                    data: null,
+                    message: "La obr_tramo debe de ser menor a 71 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_tramo: '+error.message
+             });
         }
     }
 
@@ -410,9 +491,10 @@ export class ObraMiddleware {
 
             if (!obr_fecha || !fechaRegex.test(obr_fecha)) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El formato del obr_fecha debe ser DD/MM/YYYY",
+                    data: null,
+                    message: "El formato del obr_fecha debe ser DD/MM/YYYY",
                 });
                 return;
             }
@@ -431,18 +513,25 @@ export class ObraMiddleware {
                 fecha.getDate() !== dia
             ) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_fecha no es una fecha válida.",
+                    data: null,
+                    message: "La obr_fecha no es una fecha válida.",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_fecha: '+error.message
+             });
         }
     }
 
@@ -453,36 +542,45 @@ export class ObraMiddleware {
 
             if (obr_sis === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el obr_sis",
+                    data: null,
+                    message: "Falto proporcionar el obr_sis",
                 });
                 return;
             }
 
             if (typeof obr_sis != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_sis proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "El obr_sis proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_sis.length > 2) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_sis debe de ser menor a 3 caracteres",
+                    data: null,
+                    message: "El obr_sis debe de ser menor a 3 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_sis: '+error.message
+             });
         }
     }
 
@@ -493,36 +591,45 @@ export class ObraMiddleware {
 
             if (col_nom === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el col_nom",
+                    data: null,
+                    message: "Falto proporcionar el col_nom",
                 });
                 return;
             }
 
             if (typeof col_nom != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El col_nom proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "El col_nom proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (col_nom.length > 255) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El col_nom debe de ser menor a 256 caracteres",
+                    data: null,
+                    message: "El col_nom debe de ser menor a 256 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarCol_nom: '+error.message
+             });
         }
     }
 
@@ -533,36 +640,45 @@ export class ObraMiddleware {
 
             if (obr_programa === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el obr_programa",
+                    data: null,
+                    message: "Falto proporcionar el obr_programa",
                 });
                 return;
             }
 
             if (typeof obr_programa != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_programa proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "El obr_programa proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_programa.length > 3) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_programa debe de ser menor a 4 caracteres",
+                    data: null,
+                    message: "El obr_programa debe de ser menor a 4 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_programa: '+error.message
+             });
         }
     }
 
@@ -583,9 +699,10 @@ export class ObraMiddleware {
 
             if (!obr_fecinip || !fechaRegex.test(obr_fecinip)) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El formato del obr_fecinip debe ser DD/MM/YYYY",
+                    data: null,
+                    message: "El formato del obr_fecinip debe ser DD/MM/YYYY",
                 });
                 return;
             }
@@ -604,18 +721,20 @@ export class ObraMiddleware {
                 fecha.getDate() !== dia
             ) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_fecinip no es una fecha válida.",
+                    data: null,
+                    message: "La obr_fecinip no es una fecha válida.",
                 });
                 return;
             }
 
             if (!obr_fecvenp || !fechaRegex.test(obr_fecvenp)) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El formato del obr_fecvenp debe ser DD/MM/YYYY",
+                    data: null,
+                    message: "El formato del obr_fecvenp debe ser DD/MM/YYYY",
                 });
                 return;
             }
@@ -634,9 +753,10 @@ export class ObraMiddleware {
                 fecha.getDate() !== dia
             ) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_fecvenp no es una fecha válida.",
+                    data: null,
+                    message: "La obr_fecvenp no es una fecha válida.",
                 });
                 return;
             }
@@ -650,18 +770,25 @@ export class ObraMiddleware {
             // Comparar fechas
             if (fechaVencimiento <= fechaInicio) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La fecha de vencimiento debe ser mayor a la fecha de inicio.",
+                    data: null,
+                    message: "La fecha de vencimiento debe ser mayor a la fecha de inicio.",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarFechaInicio_Vencimiento: '+error.message
+            });
         }
     }
 
@@ -672,36 +799,45 @@ export class ObraMiddleware {
 
             if (obr_npago === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_npago",
+                    data: null,
+                    message: "Falto proporcionar la obr_npago",
                 });
                 return;
             }
 
             if (typeof obr_npago != "number" || isNaN(obr_npago)) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_npago proporcionado debe ser de tipo numerico",
+                    data: null,
+                    message: "La obr_npago proporcionado debe ser de tipo numerico",
                 });
                 return;
             }
 
             if (obr_npago <= 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_npago deben de ser un numero positivo mayor a 0",
+                    data: null,
+                    message: "El obr_npago deben de ser un numero positivo mayor a 0",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_npago: '+error.message
+             });
         }
     }
 
@@ -712,36 +848,45 @@ export class ObraMiddleware {
 
             if (obr_opergob === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar la obr_opergob",
+                    data: null,
+                    message: "Falto proporcionar la obr_opergob",
                 });
                 return;
             }
 
             if (typeof obr_opergob != "string") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_opergob proporcionado debe ser de tipo string",
+                    data: null,
+                    message: "La obr_opergob proporcionado debe ser de tipo string",
                 });
                 return;
             }
 
             if (obr_opergob.length > 30) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "La obr_opergob debe de ser menor a 31 caracteres",
+                    data: null,
+                    message: "La obr_opergob debe de ser menor a 31 caracteres",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_opergob: '+error.message
+             });
         }
     }
 
@@ -752,36 +897,45 @@ export class ObraMiddleware {
 
             if (obr_inc === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el obr_inc",
+                    data: null,
+                    message: "Falto proporcionar el obr_inc",
                 });
                 return;
             }
 
             if (typeof obr_inc != "number") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_inc proporcionado debe ser de tipo numerico",
+                    data: null,
+                    message: "El obr_inc proporcionado debe ser de tipo numerico",
                 });
                 return;
             }
 
             if (obr_inc < 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El obr_inc debe de ser un numero positivo mayor o igual a 0",
+                    data: null,
+                    message: "El obr_inc debe de ser un numero positivo mayor o igual a 0",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarObr_inc: '+error.message
+             });
         }
     }
 

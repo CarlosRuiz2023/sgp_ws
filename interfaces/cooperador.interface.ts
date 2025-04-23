@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { CooperadorController } from "../controllers/cooperador.controller";
 import { UtilRequest } from "../utils/UtilRequest";
+import { UtilLogError } from "../utils/UtilLogError";
+
 const _UtilRequest = new UtilRequest();
 const _COOPERADOR_CONTROLLER = new CooperadorController();
+const _UTIL_LOG_ERROR = new UtilLogError();
 
 export class CooperadorInterface {
 
@@ -14,8 +17,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerCooperadorAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -28,8 +32,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de agregarCooperadorAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -42,8 +47,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarCooperadorAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -56,8 +62,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de eliminarCooperadorAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -70,8 +77,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerCooperadorSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -84,8 +92,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de agregarCooperadorSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -98,8 +107,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarCooperadorSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -112,8 +122,9 @@ export class CooperadorInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de eliminarCooperadorSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }

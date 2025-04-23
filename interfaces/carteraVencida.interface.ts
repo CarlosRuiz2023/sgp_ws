@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { CarteraVencidaController } from "../controllers/carteraVencida.controller";
 import { UtilRequest } from "../utils/UtilRequest";
+import { UtilLogError } from "../utils/UtilLogError";
+
 const _UtilRequest = new UtilRequest();
 const _CARTERA_VENCIDA_CONTROLLER = new CarteraVencidaController();
+const _UTIL_LOG_ERROR = new UtilLogError();
 
 export class CarteraVencidaInterface {
     public async obtenerCarteraVencidaSql(req: Request, res: Response) {
@@ -13,8 +16,9 @@ export class CarteraVencidaInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerCarteraVencidaSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -26,8 +30,9 @@ export class CarteraVencidaInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarCarteraVencidaSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }

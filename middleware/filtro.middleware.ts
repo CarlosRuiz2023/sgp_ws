@@ -1,4 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
+import { UtilLogError } from "../utils/UtilLogError";
+const UTIL_LOG_ERROR = new UtilLogError();
 
 export class FiltroMiddleware {
 
@@ -9,36 +11,45 @@ export class FiltroMiddleware {
 
             if (limit === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el limit",
+                    data: null,
+                    message: "Falto proporcionar el limit",
                 });
                 return;
             }
 
             if (typeof limit != "number") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El limit proporcionado debe ser de tipo numerico",
+                    data: null,
+                    message: "El limit proporcionado debe ser de tipo numerico",
                 });
                 return;
             }
 
             if (limit <= 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El limit debe de ser un numero positivo mayor a 0",
+                    data: null,
+                    message: "El limit debe de ser un numero positivo mayor a 0",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarLimit: '+error.message,
+            });
         }
     }
 
@@ -49,36 +60,45 @@ export class FiltroMiddleware {
 
             if (page === undefined) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Falto proporcionar el page",
+                    data: null,
+                    message: "Falto proporcionar el page",
                 });
                 return;
             }
 
             if (typeof page != "number") {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El page proporcionado debe ser de tipo numerico",
+                    data: null,
+                    message: "El page proporcionado debe ser de tipo numerico",
                 });
                 return;
             }
 
             if (page <= 0) {
                 res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El page debe de ser un numero positivo mayor a 0",
+                    data: null,
+                    message: "El page debe de ser un numero positivo mayor a 0",
                 });
                 return;
             }
 
             next();
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            return res.status(404).send({ msg: 'Token no valido' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).send({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la funcion validarPage: '+error.message,
+             });
         }
     }
 
@@ -88,9 +108,10 @@ export class FiltroMiddleware {
     
             if (filtro === undefined || filtro === null) {
                 return res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "Faltó proporcionar el parámetro 'filtro'."
+                    data: null,
+                    message: "Faltó proporcionar el parámetro 'filtro'."
                 });
             }
     
@@ -100,25 +121,33 @@ export class FiltroMiddleware {
                 // Si es número, validar rango
                 if (estatusInt < 1 || estatusInt > 5) {
                     return res.status(400).json({
+                        code:400,
                         success: false,
-                        result: null,
-                        error: "El valor numérico del 'filtro' debe estar entre 1 y 5."
+                        data: null,
+                        message: "El valor numérico del 'filtro' debe estar entre 1 y 5."
                     });
                 }
             } else if (typeof filtro !== 'string') {
                 return res.status(400).json({
+                    code:400,
                     success: false,
-                    result: null,
-                    error: "El 'filtro' debe ser un número entre 1 y 5 o una cadena para búsqueda textual."
+                    data: null,
+                    message: "El 'filtro' debe ser un número entre 1 y 5 o una cadena para búsqueda textual."
                 });
             }
     
             // Pasa la validación
             next();
     
-        } catch (error) {
+        } catch (error:any) {
             console.error(error);
-            return res.status(500).json({ success: false, error: 'Error en la validación del filtro.' });
+            UTIL_LOG_ERROR.escribirErrorEnLog(error.message);
+            return res.status(500).json({ 
+                code:500,
+                success: false,
+                data: null,
+                message: 'Error en la función validarFiltro: '+error.message,
+             });
         }
     }
 

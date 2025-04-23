@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { ObraController } from "../controllers/obra.controller";
 import { UtilRequest } from "../utils/UtilRequest";
+import { UtilLogError } from "../utils/UtilLogError";
+
 const _UtilRequest = new UtilRequest();
 const _OBRA_CONTROLLER = new ObraController();
+const _UTIL_LOG_ERROR = new UtilLogError();
 
 export class ObraInterface {
     public async obtenerObrasAccess(req: Request, res: Response) {
@@ -13,8 +16,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerObrasAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -27,8 +31,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -41,8 +46,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de agregarObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -55,8 +61,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -69,8 +76,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarEstatusObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -83,8 +91,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarCostoObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -97,8 +106,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de eliminarObraAccess: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -111,8 +121,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerObrasSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -125,8 +136,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de obtenerObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -139,8 +151,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de agregarObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -153,8 +166,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -167,8 +181,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarEstatusObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -181,8 +196,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de actualizarCostoObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }
@@ -195,8 +211,9 @@ export class ObraInterface {
                 success: true,
                 data: resultado
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            _UTIL_LOG_ERROR.escribirErrorEnLog('Error durante la ejecución de eliminarObraSql: ' +error.message);
             return res.status(500).json({ success: false, data: null });
         }
     }

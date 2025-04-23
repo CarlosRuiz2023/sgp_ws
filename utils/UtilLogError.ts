@@ -12,7 +12,7 @@ export class UtilLogError {
         });
     }
 
-    obtenerFechaHoraActual = (): string => {
+    private obtenerFechaHoraActual = (): string => {
         const fechaHora = new Date();
         const dia = this.agregarCeroAlInicio(fechaHora.getDate());
         const mes = this.agregarCeroAlInicio(fechaHora.getMonth() + 1);
@@ -24,7 +24,7 @@ export class UtilLogError {
         return `${dia}-${mes}-${anio} ${horas}:${minutos}:${segundos}`;
     }
 
-    agregarCeroAlInicio = (numero: number): string => {
+    private agregarCeroAlInicio = (numero: number): string => {
         return numero < 10 ? `0${numero}` : numero.toString();
     }
 }
