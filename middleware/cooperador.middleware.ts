@@ -150,9 +150,9 @@ export class CooperadiresMiddleware {
 
             if (coo_clv.length == 10) {
 
-                const obra = await Obra.findOne({ coo_obr: coo_clv });
+                const obra = await Obra.findOne({ where: {coo_clv} });
                 // Ejecutar consulta con parámetros
-                const predial = await Cooperador.findOne({ coo_clv: coo_clv });
+                const predial = await Cooperador.findOne({ where: {coo_clv} });
                 if (predial && obra) {
                     res.status(400).json({
                         code:400,
@@ -164,7 +164,7 @@ export class CooperadiresMiddleware {
                 }
             } else {
                 // Ejecutar consulta con parámetros
-                const predial = await Cooperador.findOne({ coo_clv: coo_clv });
+                const predial = await Cooperador.findOne({ where: {coo_clv} });
                 if (predial) {
                     res.status(400).json({
                         code:400,
@@ -273,8 +273,8 @@ export class CooperadiresMiddleware {
                 return;
             }
             // Ejecutar consulta con parámetros
-            const predial = await Cooperador.findOne({ coo_clv: coo_clv });
-            if (predial.recordset.length > 0) {
+            const predial = await Cooperador.findOne({ where: {coo_clv} });
+            if (predial) {
                 res.status(400).json({
                     code:400,
                     success: false,

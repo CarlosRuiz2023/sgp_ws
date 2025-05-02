@@ -89,8 +89,8 @@ export class ObraMiddleware {
                 return;
             }
             // Ejecutar consulta con parámetros
-            const obra = await Obra.findOne({ obr_clv: obr_clv });
-            if (obra) {
+            const obra = await Obra.findOne({ where: {obr_clv} });
+            if (!obra) {
                 res.status(400).json({
                     code:400,
                     success: false,
@@ -198,7 +198,7 @@ export class ObraMiddleware {
             }
 
             // Ejecutar consulta con parámetros
-            const obra = await Obra.findOne({ obr_clv: obr_clv });
+            const obra = await Obra.findOne({ where: {obr_clv} });
             if (obra) {
                 res.status(400).json({
                     code:400,

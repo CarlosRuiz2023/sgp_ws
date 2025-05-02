@@ -1,1 +1,24 @@
 [19-04-2025 17:23:00] ERROR: Request failed with status code 500
+[25-04-2025 15:30:16] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: Cannot read properties of undefined (reading 'findAll')
+[25-04-2025 15:31:25] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: obrasPostgreSQL.map is not a function
+[30-04-2025 14:20:55] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: obrasPostgreSQL.map is not a function
+[30-04-2025 14:22:15] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: Cannot read properties of undefined (reading 'map')
+[30-04-2025 14:39:37] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: no existe la columna «col_clv_int»
+[30-04-2025 14:44:43] ERROR: Error durante la ejecución de obtenerCarteraVencidaSql: no existe la columna «evid_fec_pub1»
+[01-05-2025 11:17:57] ERROR: Error durante la ejecución de obtenerObrasSql: validarRespuestaConsulta is not defined
+[01-05-2025 11:18:35] ERROR: Error durante la ejecución de obtenerObrasSql: validarRespuestaConsulta is not defined
+[01-05-2025 11:41:40] ERROR: Error durante la ejecución de obtenerObraSql: Cannot read properties of undefined (reading 'length')
+[01-05-2025 11:42:06] ERROR: Error durante la ejecución de obtenerObraSql: Cannot read properties of undefined (reading 'length')
+[01-05-2025 11:43:55] ERROR: Error durante la ejecución de obtenerObraSql: The argument passed to findOne must be an options object, use findByPk if you wish to pass a single primary key value
+[01-05-2025 11:44:49] ERROR: Error durante la ejecución de obtenerObraSql: Cannot read properties of undefined (reading 'length')
+[01-05-2025 11:45:59] ERROR: Error durante la ejecución de obtenerObraSql: Cannot read properties of undefined (reading 'length')
+[01-05-2025 11:47:01] ERROR: Error durante la ejecución de obtenerObraSql: obra_model_1.Obra.findByPrimaryKey is not a function
+[01-05-2025 11:50:30] ERROR: Error durante la ejecución de obtenerObraSql: Cannot read properties of undefined (reading 'length')
+[01-05-2025 12:04:42] ERROR: Error durante la ejecución de obtenerObraSql: Consulta SQL invalida
+[01-05-2025 17:39:29] ERROR: Cannot read properties of undefined (reading 'length')
+[01-05-2025 17:40:59] ERROR: Cannot read properties of undefined (reading 'length')
+[01-05-2025 17:42:15] ERROR: Cannot read properties of undefined (reading 'length')
+[01-05-2025 17:43:35] ERROR: Cannot read properties of undefined (reading 'length')
+[01-05-2025 17:46:24] ERROR: Cannot read properties of null (reading 'recordset')
+[01-05-2025 17:46:57] ERROR: Cannot read properties of null (reading 'recordset')
+[01-05-2025 17:48:00] ERROR: Cannot read properties of null (reading 'recordset')

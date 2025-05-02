@@ -7,6 +7,7 @@ import { ObraModel } from '../../models/obra.model';
 import { CooperadorModel } from '../../models/cooperador.model';
 import { CarteraVencidaModel } from '../../models/carteraVencida.model';
 import { ProgramaModel } from '../../models/programa.model';
+import { ObraPostgreSQLModel } from '../../models/obraPostgreSQL.model';
 
 
 let dbPostgres: Sequelize;
@@ -62,6 +63,7 @@ const initConnections = async () => {
   CooperadorModel();
   CarteraVencidaModel();
   ProgramaModel();
+  ObraPostgreSQLModel();
 
   console.log("Conexiones inicializadas correctamente.");
 };

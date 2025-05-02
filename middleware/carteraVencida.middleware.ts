@@ -190,24 +190,7 @@ export class CarteraVencidaMiddleware {
                 });
                 return;
             }
-
-            // Conectar a la base de datos
-            /* await sql.connect(configSQLServer);
-            // Crear request con parámetros
-            const request = new sql.Request();
-            request.input('CTA_PREDIAL', sql.VarChar, cta_predial);
-            // Ejecutar consulta con parámetros
-            const predial = await request.query(`SELECT * FROM [dbo].[CARTERA_VENCIDA] WHERE [CTA_PREDIAL] = @CTA_PREDIAL`)
-            if (predial.recordset.length == 0) {
-                res.status(400).json({
-                    success: false,
-                    result: null,
-                    error: "La cta_predial no se encuentra registrada en pFidoc",
-                });
-                return;
-            }
-            await sql.close(); */
-            const cartera = await CarteraVencida.findOne({ cta_predial: cta_predial })
+            const cartera = await CarteraVencida.findOne({ where: {cta_predial} })
             if (!cartera){
                 res.status(400).json({
                     code:400,

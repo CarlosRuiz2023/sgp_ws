@@ -1,72 +1,20 @@
 import { CarteraVencida } from "../models/carteraVencida.model";
-/* import { ApiLogsService } from "../services/api_logs.service";
-const _ApiLogService = new ApiLogsService(); */
+import { UtilQuerys } from "../utils/UtilQuerys";
+
+const _UtilQuerys = new UtilQuerys();
 
 export class CarteraVencidaController {
   public async obtenerCarteraVencida(data: any) {
     const params = await data;
     const { cta_predial } = params;
-    console.log(cta_predial);
-
-    // Conectar a la base de datos
-    /* await sql.connect(configSQLServer);
-
-    // Crear request con parámetros
-    const request = new sql.Request();
-    request.input('SALDOSIN', sql.Float, parseFloat(saldosin));
-    request.input('SALDOCON', sql.Float, parseFloat(saldocon));
-    request.input('INCREMENTO_OBRA', sql.Float, parseFloat(incremento));
-    request.input('CTA_PREDIAL', sql.VarChar, cta_predial);
-
-    // Ejecutar consulta con parámetros
-    const result = await request.query(`
-      UPDATE [dbo].[CARTERA_VENCIDA]
-        SET [SALDOSIN] = @SALDOSIN + @INCREMENTO_OBRA,
-            [SALDOCON] = @SALDOCON + @INCREMENTO_OBRA,
-            [INCREMENTO_OBRA] = @INCREMENTO_OBRA
-        WHERE [CTA_PREDIAL] = @CTA_PREDIAL
-    `);
-
-    let cartera_vencida = null;
-
-    if (result.rowsAffected[0] > 0) {
-      // Ejecutar consulta con parámetros
-      cartera_vencida = await request.query(`SELECT * FROM [pFidoc].[dbo].[CARTERA_VENCIDA] WHERE [CTA_PREDIAL] = @CTA_PREDIAL`);
-    }
-    return cartera_vencida.recordset[0]; */
-    return await CarteraVencida.findOne({ where: { cta_predial } });
+    const cartera_vencida = await CarteraVencida.findOne({ where: { cta_predial } });
+    if (_UtilQuerys.validarRespuestaFindOneSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
+    return cartera_vencida;
   }
   public async actualizarCarteraVencidaSql(data: any) {
     const params = await data;
     const { saldosin, saldocon, incremento, cta_predial } = params;
-
-    // Conectar a la base de datos
-    /* await sql.connect(configSQLServer);
-
-    // Crear request con parámetros
-    const request = new sql.Request();
-    request.input('SALDOSIN', sql.Float, parseFloat(saldosin));
-    request.input('SALDOCON', sql.Float, parseFloat(saldocon));
-    request.input('INCREMENTO_OBRA', sql.Float, parseFloat(incremento));
-    request.input('CTA_PREDIAL', sql.VarChar, cta_predial);
-
-    // Ejecutar consulta con parámetros
-    const result = await request.query(`
-      UPDATE [dbo].[CARTERA_VENCIDA]
-        SET [SALDOSIN] = @SALDOSIN + @INCREMENTO_OBRA,
-            [SALDOCON] = @SALDOCON + @INCREMENTO_OBRA,
-            [INCREMENTO_OBRA] = @INCREMENTO_OBRA
-        WHERE [CTA_PREDIAL] = @CTA_PREDIAL
-    `);
-
-    let cartera_vencida = null;
-
-    if (result.rowsAffected[0] > 0) {
-      // Ejecutar consulta con parámetros
-      cartera_vencida = await request.query(`SELECT * FROM [pFidoc].[dbo].[CARTERA_VENCIDA] WHERE [CTA_PREDIAL] = @CTA_PREDIAL`);
-    }
-    return cartera_vencida.recordset[0]; */
-    const carteraVencida = await CarteraVencida.update({
+    const cartera_vencida = await CarteraVencida.update({
       saldosin: parseFloat(saldosin) + parseFloat(incremento),
       saldocon: parseFloat(saldocon) + parseFloat(incremento),
       incremento: parseFloat(incremento),
@@ -75,11 +23,8 @@ export class CarteraVencidaController {
         cta_predial: cta_predial,
       },
     });
-    if (carteraVencida[0] == 1) {
-      const carteraVencidaRecuperada = await CarteraVencida.findOne({ where: { cta_predial } });
-      return carteraVencidaRecuperada;
-    } else {
-      return 'No se ha actualizado la cartera correctamente.';
-    }
+    if (_UtilQuerys.validarRespuestaUpdateSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
+    const carteraVencidaRecuperada = await CarteraVencida.findOne({ where: { cta_predial } });
+    return carteraVencidaRecuperada;
   }
 }
