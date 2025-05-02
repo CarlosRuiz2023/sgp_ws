@@ -190,7 +190,7 @@ export class CarteraVencidaMiddleware {
                 });
                 return;
             }
-            const cartera = await CarteraVencida.findOne({ where: {cta_predial} })
+            const cartera = await CarteraVencida.findOne({ where: {cta_predial} });
             if (!cartera){
                 res.status(404).json({
                     code:404,

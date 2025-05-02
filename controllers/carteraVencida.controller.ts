@@ -8,7 +8,7 @@ export class CarteraVencidaController {
     const params = await data;
     const { cta_predial } = params;
     const cartera_vencida = await CarteraVencida.findOne({ where: { cta_predial } });
-    if (_UtilQuerys.validarRespuestaFindOneSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
+    if (!_UtilQuerys.validarRespuestaFindOneSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
     return cartera_vencida;
   }
   public async actualizarCarteraVencidaSql(data: any) {
@@ -20,10 +20,11 @@ export class CarteraVencidaController {
       incremento: parseFloat(incremento),
     }, {
       where: {
-        cta_predial: cta_predial,
+        CTA_PREDIAL: cta_predial,
       },
     });
-    if (_UtilQuerys.validarRespuestaUpdateSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
+    console.log(cartera_vencida);
+    if (!_UtilQuerys.validarRespuestaUpdateSQLServer(cartera_vencida)) return "Respuesta de BD invalida";
     const carteraVencidaRecuperada = await CarteraVencida.findOne({ where: { cta_predial } });
     return carteraVencidaRecuperada;
   }

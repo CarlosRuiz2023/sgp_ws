@@ -1,8 +1,10 @@
 import { SwaggerObraController } from "./controllers/swagger-obras.controller";
-import { SwaggerCooperadorController } from "./controllers/swagger-cooperadorescontroller"
+import { SwaggerCooperadorController } from "./controllers/swagger-cooperadores.controller";
+import { SwaggerCarteraVencidaController } from "./controllers/swagger-cartera-vencida.controller";
 
 var _SwaggerObraController = new SwaggerObraController();
 var _SwaggerCooperadorController = new SwaggerCooperadorController();
+var _SwaggerCarteraVencidaController = new SwaggerCarteraVencidaController();
 
 export class SwaggerFile {
 
@@ -31,7 +33,8 @@ export class SwaggerFile {
             ],
             "tags": [
                 _SwaggerObraController.tag,
-                _SwaggerCooperadorController.tag
+                _SwaggerCooperadorController.tag,
+                _SwaggerCarteraVencidaController.tag
 
             ],
             "paths": {
@@ -59,9 +62,11 @@ export class SwaggerFile {
                 "/cooperadores/sql/{coo_clv}": _SwaggerCooperadorController.getCooperadoresSql,
                 "/cooperadores/sql/agregar": _SwaggerCooperadorController.postCooperadorSql,
                 "/cooperadores/sql/actualizar/{coo_clv}": _SwaggerCooperadorController.putCooperadorSql,
-                "/cooperadores/sql/eliminar/{coo_clv}": _SwaggerCooperadorController.deleteCooperadorSql
+                "/cooperadores/sql/eliminar/{coo_clv}": _SwaggerCooperadorController.deleteCooperadorSql,
 
                 //CARTERA VENCIDA
+                "/carteraVencida/{cta_predial}":_SwaggerCarteraVencidaController.getCarteraVencida,
+                "/carteraVencida":_SwaggerCarteraVencidaController.putCarteraVencida
 
                 //ACTUALIZACIONES A BDS
             },
