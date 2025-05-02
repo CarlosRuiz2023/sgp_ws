@@ -44,6 +44,7 @@ const CarteraVencidaModel = async () => {
     },
     CTA_PREDIAL:{
       type:DataTypes.STRING,
+      primaryKey:true,
     },
     NOMBRE_COOPERADOR:{
       type:DataTypes.STRING
@@ -156,7 +157,7 @@ const CarteraVencidaModel = async () => {
   }, {
     tableName: 'CARTERA_VENCIDA',
     schema: 'dbo',
-    timestamps: false // si tu tabla no usa createdAt / updatedAt
+    timestamps: false, // si tu tabla no usa createdAt / updatedAt,
   });
   
 }

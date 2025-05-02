@@ -63,8 +63,8 @@ const Cron = new CustomCron();
   const swaggerJson = await _SwaggerInterface.loadConfigFile();
 
   // SWAGGER
-  www.api.use('/swagger', swaggerUI.serve);
-  www.api.get('/swagger/v1', swaggerUI.setup(swaggerJson));
+  www.api.use('/api/swagger', swaggerUI.serve);
+  www.api.get('/api/swagger/v1', swaggerUI.setup(swaggerJson));
 
   // info route
   www.api.get('/', (req: any, res: any) => {
@@ -83,7 +83,7 @@ const Cron = new CustomCron();
   www.start(() => {
 
     if (ENV.API.ENVIRONMENT == 'DEV' || ENV.API.ENVIRONMENT == 'LOCAL') {
-      console.log(`Testear ruta: http://localhost:${ENV.API.PORT} , http://localhost:${ENV.API.PORT}/v1/demo/test`, `http://localhost:${ENV.API.PORT}/v1/swagger/`);
+      console.log(`Testear ruta: http://localhost:${ENV.API.PORT}`, `http://localhost:${ENV.API.PORT}/api/swagger/v1`);
     }
 
   });

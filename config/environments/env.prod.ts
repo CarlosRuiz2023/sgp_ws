@@ -1,77 +1,46 @@
-// EN ARCHIVO DE PRODUCTIVO UNICAMENTE DAR DE ALTA LAS VARIABLES DE ENTORNO
-// MODIFICAR A LA PAR ARCHIVO DE INTEGRACION - cargar-variables-prod-vers
-// DAR DE ALTA VARIABLES EN GITLAB Y VERIFICAR PARSEO
-
-import { UtilBoolean } from "../../utils/UtilBoolean";
-const _UtilBoolean = new UtilBoolean();
-
 export default {
   API: {
-    ENVIRONMENT: "PRODUCTIVO",
-    NAME: process.env.APP_NAME, // NO MOVER
-    PORT: process.env.PROD_API_PORT, // NO MOVER
-    VERSION: process.env.APP_VERSION, // NO MOVER
-    SECRET_KEY: process.env.PROD_API_SECRET_KEY,
-    CORS: process.env.PROD_API_CORS,  // lista de cors se separan por una coma
-    DEBUG: true // ver logs en terminal
+    ENVIRONMENT: "PROD",
+    NAME: "API TYPESCRIPT",
+    PORT: 3500,
+    VERSION: "1.0.0",
+    SECRET_KEY: "*FIDOC_2025*",
+    CORS: "*,localhost,localhost:4200", // lista de cors se separan por una coma
+    DEBUG: false // ver logs en terminal
   },
-
-  SERVICES: {
-    API_LOGS: {
-      ENVIRONMENT: "PROD",
-      NAME: "CENTRALIZADO_LOGS",
-      BASE_URI: process.env.PROD_LOGS_BASE_URI,
-      KEY: process.env.PROD_LOGS_KEY, // secret token de la api
-      CLIENT_ID: process.env.PROD_LOGS_CLIENT_ID,
-      SECRET_KEY: process.env.PROD_LOGS_SECRET_KEY,
-      SCOPE: process.env.PROD_LOGS_SCOPE,
-      APLICATIVO: process.env.PROD_LOGS_APLICATIVO, // id de la aplicacion - este es unico por app
-    },
-    IDENTITY_FUNCIONARIO: {
-      NAME: "IDENTITY_FUNCIONARIO",
-      BASE_URI: process.env.PROD_IDENTITYF_BASE_URI,
-      CLIENT_ID: process.env.PROD_IDENTITYF_CLIENT_ID,
-      CLIENT_SECRET: process.env.PROD_IDENTITYF_CLIENT_SECRET,
-      GRANT_TYPE: process.env.PROD_IDENTITYF_GRANT_TYPE,
-      SCOPES: process.env.PROD_IDENTITYF_SCOPES,
-    }
-  },
-
 
   SWAGGER: {
     ENVIRONMENT: "PROD",
     TITLE: "API",
-    HOST: process.env.PROD_SWAGGER_HOST,
-    BASE_PATH: process.env.PROD_SWAGGER_BASE_PATH,
-    EMAIL: process.env.PROD_SWAGGER_EMAIL,
+    HOST: 'localhost:3500',
+    BASE_PATH: '/v1',
+    EMAIL: 'juan.ruiz@leon.gob.mx'
   },
 
-  MONGODB: {
+  ACCESS: {
     ENVIRONMENT: "PROD",
-    HOST: process.env.PROD_MONGO_HOST,
-    PORT: process.env.PROD_MONGO_PORT,
-    USER_NAME: process.env.PROD_MONGO_USER_NAME,
-    USER_PASSWORD: process.env.PROD_MONGO_USER_PASSWORD,
-    DATABASE: process.env.PROD_MONGO_DATABASE,
+    HOST: "\\192.1.126.122\fidoc_respaldos\apps\fidoc\base\obrasdb992007.accdb",
+    USER_PASSWORD: "LEONFIDOC",
   },
-  MYSQL: {
+  POSTGRESQL: {
     ENVIRONMENT: "PROD",
-    HOST: process.env.PROD_MYSQL_HOST,
-    PORT: process.env.PROD_MYSQL_PORT,
-    USER_NAME: process.env.PROD_MYSQL_USER_NAME,
-    USER_PASSWORD: process.env.PROD_MYSQL_USER_PASSWORD,
-    DATABASE: process.env.PROD_MYSQL_DATABASE,
+    HOST: "172.17.15.21",
+    PORT: "5432",
+    USER_NAME: "usrfidoc",
+    USER_PASSWORD: "Z8XacQ@eb-nA",
+    DATABASE: "gisfidoc",
   },
   SQL: {
     ENVIRONMENT: "PROD",
-    HOST: process.env.PROD_SQL_HOST,
-    PORT: process.env.PROD_SQL_PORT,
-    USER_NAME: process.env.PROD_SQL_USER_NAME,
-    USER_PASSWORD: process.env.PROD_SQL_USER_PASSWORD,
-    DATABASE: process.env.PROD_SQL_DATABASE,
-    ENCRYPT: _UtilBoolean.toBoolean(process.env.PROD_SQL_ENCRYPT),
+    HOST: "192.1.1.24",
+    PORT: "1434",
+    USER_NAME: "usr_fidoc_qa",
+    USER_PASSWORD: "&8stl52u*hLp",
+    DATABASE: "pfidoc",
+    ENCRYPT: false
   },
   PAGOS:{
+    ENVIRONMENT: "PROD",
     HOST: "http://localhost:49947",
   }
 };

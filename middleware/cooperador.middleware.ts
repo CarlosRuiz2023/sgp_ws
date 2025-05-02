@@ -62,8 +62,8 @@ export class CooperadiresMiddleware {
             if (coo_clv.length == 10) {
                 const cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_obr = '${coo_clv}'`);
                 if (cooperador.length == 0) {
-                    res.status(400).json({
-                        code:400,
+                    res.status(404).json({
+                        code:404,
                         success: false,
                         data: null,
                         message: "La coo_clv proporcionada no existe en la bd de Access",
@@ -73,8 +73,8 @@ export class CooperadiresMiddleware {
             } else {
                 const cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_clv = '${coo_clv}'`);
                 if (cooperador.length == 0) {
-                    res.status(400).json({
-                        code:400,
+                    res.status(404).json({
+                        code:404,
                         success: false,
                         data: null,
                         message: "La coo_clv proporcionada no existe en la bd de Access",
@@ -153,9 +153,9 @@ export class CooperadiresMiddleware {
                 const obra = await Obra.findOne({ where: {coo_clv} });
                 // Ejecutar consulta con parámetros
                 const predial = await Cooperador.findOne({ where: {coo_clv} });
-                if (predial && obra) {
-                    res.status(400).json({
-                        code:400,
+                if (!predial || !obra) {
+                    res.status(404).json({
+                        code:404,
                         success: false,
                         data: null,
                         message: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
@@ -165,9 +165,9 @@ export class CooperadiresMiddleware {
             } else {
                 // Ejecutar consulta con parámetros
                 const predial = await Cooperador.findOne({ where: {coo_clv} });
-                if (predial) {
-                    res.status(400).json({
-                        code:400,
+                if (!predial) {
+                    res.status(404).json({
+                        code:404,
                         success: false,
                         data: null,
                         message: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
@@ -877,7 +877,7 @@ export class CooperadiresMiddleware {
                 });
                 return;
             }
-            const cooperadorExistente = await Cooperador.findOne({ coo_pred });
+            const cooperadorExistente = await Cooperador.findOne({ where:{coo_pred} });
             if (cooperadorExistente) {
                 res.status(400).json({
                     code:400,
@@ -936,7 +936,12 @@ export class CooperadiresMiddleware {
                 });
                 return;
             }
-            const cooperadorExistente = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_pred = '${coo_pred}'`);
+            let cooperadorExistente=null;
+            try{
+                cooperadorExistente = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_pred = '${coo_pred}'`);
+            }catch(error){
+
+            }
             if (cooperadorExistente) {
                 res.status(400).json({
                     code:400,

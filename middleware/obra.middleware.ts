@@ -37,8 +37,8 @@ export class ObraMiddleware {
 
             const obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
             if (obra.length === 0) {
-                res.status(400).json({
-                    code:400,
+                res.status(404).json({
+                    code:404,
                     success: false,
                     data: null,
                     message: "El obr_clv proporcionado no existe dentro de la base de datos de Access",
@@ -91,8 +91,8 @@ export class ObraMiddleware {
             // Ejecutar consulta con parámetros
             const obra = await Obra.findOne({ where: {obr_clv} });
             if (!obra) {
-                res.status(400).json({
-                    code:400,
+                res.status(404).json({
+                    code:404,
                     success: false,
                     data: null,
                     message: "El obr_clv proporcionado no existe dentro de la base de datos de SQL Server",

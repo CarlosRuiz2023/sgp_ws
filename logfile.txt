@@ -22,3 +22,9 @@
 [01-05-2025 17:46:24] ERROR: Cannot read properties of null (reading 'recordset')
 [01-05-2025 17:46:57] ERROR: Cannot read properties of null (reading 'recordset')
 [01-05-2025 17:48:00] ERROR: Cannot read properties of null (reading 'recordset')
+[02-05-2025 08:05:42] ERROR: Spawn C:\WINDOWS\System32\cscript.exe error
+[02-05-2025 08:06:44] ERROR: Spawn C:\WINDOWS\System32\cscript.exe error
+[02-05-2025 08:32:24] ERROR: Error durante la ejecución de agregarCooperadorSql: Invalid column name 'id'.
+[02-05-2025 08:34:39] ERROR: Invalid column name 'coo_clv'.
+[02-05-2025 08:44:57] ERROR: Error durante la ejecución de agregarCooperadorSql: Invalid column name 'id'.
+[02-05-2025 08:47:55] ERROR: Error durante la ejecución de agregarCooperadorSql: Invalid column name 'id'.

@@ -42,7 +42,7 @@ export class ObraInterface {
         try {
             var params = _UtilRequest.getParams(req);
             let resultado = await _OBRA_CONTROLLER.agregarObraAccess(params);
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 data: resultado
             });
@@ -147,7 +147,7 @@ export class ObraInterface {
         try {
             var params = _UtilRequest.getParams(req);
             let resultado = await _OBRA_CONTROLLER.agregarObraSql(params);
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 data: resultado
             });

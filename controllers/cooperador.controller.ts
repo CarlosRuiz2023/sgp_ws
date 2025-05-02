@@ -72,7 +72,11 @@ export class CooperadorController {
     } else {
       cooperador = await Cooperador.findOne({ where: { coo_obr: coo_clv } });
     }
-    if (!_UtilQuerys.validarRespuestaFindAllSQLServer(cooperador)) return "Respuesta de BD invalida";
+    if (coo_clv.length == 13) {
+      if (!_UtilQuerys.validarRespuestaFindOneSQLServer(cooperador)) return "Respuesta de BD invalida";
+    }else{
+      if (!_UtilQuerys.validarRespuestaFindAllSQLServer(cooperador)) return "Respuesta de BD invalida";
+    }
     return cooperador;
   }
 

@@ -1,47 +1,25 @@
 export default {
   API: {
     ENVIRONMENT: "QA",
-    NAME: process.env.APP_NAME || "API TYPESCRIPT", // mover solo variable opcional
-    PORT: process.env.QA_API_PORT || 3500, // mover solo variable opcional
-    VERSION: process.env.APP_VERSION || "1.0.0", // mover solo variable opcional
-    SECRET_KEY: "my-secret-key-QA",
-    CORS: "*,localhost,localhost:4200",  // lista de cors se separan por una coma
+    NAME: "API TYPESCRIPT",
+    PORT: 3500,
+    VERSION: "1.0.0",
+    SECRET_KEY: "*FIDOC_2025*",
+    CORS: "*,localhost,localhost:4200", // lista de cors se separan por una coma
     DEBUG: false // ver logs en terminal
   },
-
-  SERVICES: {
-    API_LOGS: {
-      ENVIRONMENT: "QA",
-      NAME: "CENTRALIZADO_LOGS",
-      BASE_URI: "https://busserviciosqa.leon.gob.mx/mongologs/v1",
-      KEY: "5JQNYC935J-PWU", // secret token de la api
-      CLIENT_ID: "log_demo_client",
-      SECRET_KEY: "demo123",
-      SCOPE: "demo",
-      APLICATIVO: "6619605cbaba1325111916c5", // id de la aplicacion - este es unico por app
-    },
-    IDENTITY_FUNCIONARIO: {
-      NAME: "IDENTITY_FUNCIONARIO",
-      BASE_URI: "https://logidentityqa.leon.gob.mx:8081/connect/token",
-      CLIENT_ID: "AAAAAAAA",
-      CLIENT_SECRET: "AAAAAAAA",
-      GRANT_TYPE: "AAAAAAAA",
-      SCOPES: "AAAAAAAA",
-    }
-  },
-
 
   SWAGGER: {
     ENVIRONMENT: "QA",
     TITLE: "API",
     HOST: 'localhost:3500',
     BASE_PATH: '/v1',
-    EMAIL: 'example@leon.gob.mx'
+    EMAIL: 'juan.ruiz@leon.gob.mx'
   },
 
   ACCESS: {
     ENVIRONMENT: "QA",
-    HOST: "C:/Fidoc/obrasdb992007.accdb",
+    HOST: "\\192.1.126.122\fidoc_respaldos\apps\fidoc\base\obrasdb992007.accdb",
     USER_PASSWORD: "LEONFIDOC",
   },
   POSTGRESQL: {
@@ -62,6 +40,7 @@ export default {
     ENCRYPT: false
   },
   PAGOS:{
+    ENVIRONMENT: "QA",
     HOST: "http://localhost:49947",
   }
 };

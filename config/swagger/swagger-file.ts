@@ -1,6 +1,8 @@
 import { SwaggerObraController } from "./controllers/swagger-obras.controller";
+import { SwaggerCooperadorController } from "./controllers/swagger-cooperadorescontroller"
 
 var _SwaggerObraController = new SwaggerObraController();
+var _SwaggerCooperadorController = new SwaggerCooperadorController();
 
 export class SwaggerFile {
 
@@ -28,23 +30,40 @@ export class SwaggerFile {
                 "https"
             ],
             "tags": [
-                _SwaggerObraController.tag
+                _SwaggerObraController.tag,
+                _SwaggerCooperadorController.tag
+
             ],
             "paths": {
+                //OBRAS
                 "/obras/access": _SwaggerObraController.getObrasAccess,
-                "/obras/access/:obr_clv": _SwaggerObraController.getObraAccess,
+                "/obras/access/{obr_clv}": _SwaggerObraController.getObraAccess,
                 "/obras/access/agregar": _SwaggerObraController.postObraAccess,
-                "/obras/access/actualizar": _SwaggerObraController.putObraAccess,
-                "/obras/access/estatus": _SwaggerObraController.putEstatusObraAccess,
-                "/obras/access/costo": _SwaggerObraController.putCostoObraAccess,
-                "/obras/access/eliminar": _SwaggerObraController.deleteObraAccess,
+                "/obras/access/actualizar/{obr_clv}": _SwaggerObraController.putObraAccess,
+                "/obras/access/cambiarEstatus/{obr_clv}": _SwaggerObraController.putEstatusObraAccess,
+                "/obras/access/incrementarCosto/{obr_clv}": _SwaggerObraController.putCostoObraAccess,
+                "/obras/access/eliminar/{obr_clv}": _SwaggerObraController.deleteObraAccess,
                 "/obras/sql": _SwaggerObraController.getObrasSql,
-                "/obras/sql/:obr_clv": _SwaggerObraController.getObraSql,
+                "/obras/sql/{obr_clv}": _SwaggerObraController.getObraSql,
                 "/obras/sql/agregar": _SwaggerObraController.postObraSql,
-                "/obras/sql/actualizar": _SwaggerObraController.putObraSql,
-                "/obras/sql/estatus": _SwaggerObraController.putEstatusObraSql,
-                "/obras/sql/costo": _SwaggerObraController.putCostoObraSql,
-                "/obras/sql/eliminar": _SwaggerObraController.deleteObraSql
+                "/obras/sql/actualizar/{obr_clv}": _SwaggerObraController.putObraSql,
+                "/obras/sql/cambiarEstatus/{obr_clv}": _SwaggerObraController.putEstatusObraSql,
+                "/obras/sql/incrementarCosto/{obr_clv}": _SwaggerObraController.putCostoObraSql,
+                "/obras/sql/eliminar/{obr_clv}": _SwaggerObraController.deleteObraSql,
+
+                //COOPERADORES
+                "/cooperadores/access/{coo_clv}": _SwaggerCooperadorController.getCooperadoresAccess,
+                "/cooperadores/access/agregar": _SwaggerCooperadorController.postCooperadorAccess,
+                "/cooperadores/access/actualizar/{coo_clv}": _SwaggerCooperadorController.putCooperadorAccess,
+                "/cooperadores/access/eliminar/{coo_clv}": _SwaggerCooperadorController.deleteCooperadorAccess,
+                "/cooperadores/sql/{coo_clv}": _SwaggerCooperadorController.getCooperadoresSql,
+                "/cooperadores/sql/agregar": _SwaggerCooperadorController.postCooperadorSql,
+                "/cooperadores/sql/actualizar/{coo_clv}": _SwaggerCooperadorController.putCooperadorSql,
+                "/cooperadores/sql/eliminar/{coo_clv}": _SwaggerCooperadorController.deleteCooperadorSql
+
+                //CARTERA VENCIDA
+
+                //ACTUALIZACIONES A BDS
             },
             "externalDocs": {
                 "description": "Find out more about Swagger",

@@ -28,7 +28,7 @@ export class CooperadorInterface {
         try {
             var params = _UtilRequest.getParams(req);
             let resultado = await _COOPERADOR_CONTROLLER.agregarCooperadorAccess(params);
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 data: resultado
             });
@@ -88,7 +88,7 @@ export class CooperadorInterface {
         try {
             var params = _UtilRequest.getParams(req);
             let resultado = await _COOPERADOR_CONTROLLER.agregarCooperadorSql(params);
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 data: resultado
             });

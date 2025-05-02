@@ -192,8 +192,8 @@ export class CarteraVencidaMiddleware {
             }
             const cartera = await CarteraVencida.findOne({ where: {cta_predial} })
             if (!cartera){
-                res.status(400).json({
-                    code:400,
+                res.status(404).json({
+                    code:404,
                     success: false,
                     data: null,
                     message: "La cta_predial no se encuentra registrada en pFidoc",

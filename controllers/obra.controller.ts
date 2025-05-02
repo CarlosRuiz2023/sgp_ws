@@ -235,13 +235,15 @@ export class ObraController {
       where: { obr_clv }
     });
     if (!_UtilQuerys.validarRespuestaUpdateSQLServer(result)) return "Respuesta de BD invalida";
-    const result1 = await Cooperador.update({
+    //const result1 = 
+    await Cooperador.update({
       coo_inc: obr_inc
     }, {
       where: { coo_obr: obr_clv }
     });
-    if (!_UtilQuerys.validarRespuestaUpdateSQLServer(result1)) return "Respuesta de BD invalida";
-    const result2 = await CarteraVencida.update({
+    //if (!_UtilQuerys.validarRespuestaUpdateSQLServer(result1)) return "Respuesta de BD invalida";
+    //const result2 = 
+    await CarteraVencida.update({
       INCREMENTO_OBRA: obr_inc,
       COO_INC: obr_inc,
       SALDOSIN: Sequelize.literal(`[SALDOSIN] - [SALDOSIN] + ${obr_inc}`),
@@ -249,7 +251,7 @@ export class ObraController {
     }, {
       where: { OBRA: obr_clv }
     });
-    if (!_UtilQuerys.validarRespuestaUpdateSQLServer(result2)) return "Respuesta de BD invalida";
+    //if (!_UtilQuerys.validarRespuestaUpdateSQLServer(result2)) return "Respuesta de BD invalida";
     obra = await Obra.findOne({ where: { obr_clv } });
     return obra;
   }
@@ -260,7 +262,7 @@ export class ObraController {
     const obra = await Obra.destroy({
       where: { obr_clv }
     });
-    if (!_UtilQuerys.validarRespuestaUpdateSQLServer(obra)) return "Respuesta de BD invalida";
+    if (!_UtilQuerys.validarRespuestaDeleteSQLServer(obra)) return "Respuesta de BD invalida";
     return 'Obra eliminada exitosamente.';
   }
 }
