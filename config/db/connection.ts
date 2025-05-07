@@ -8,6 +8,12 @@ import { CooperadorModel } from '../../models/cooperador.model';
 import { CarteraVencidaModel } from '../../models/carteraVencida.model';
 import { ProgramaModel } from '../../models/programa.model';
 import { ObraPostgreSQLModel } from '../../models/obraPostgreSQL.model';
+import { CooperadorPostgreSQLModel } from '../../models/cooperadorPostgreSQL.model';
+import { FrentePostgreSQLModel } from '../../models/frentePostgreSQL.model';
+import { MovtosFinancPostgreSQLModel } from '../../models/movtosFinancPostgreSQL.model';
+import { CapitalPagadoPostgreSQLModel } from '../../models/capitalPagadoPostgreSQL.model';
+import { PredioPostgreSQLModel } from '../../models/prediosPostgreSQL.model';
+import { ObraGeoPostgreSQLModel } from '../../models/obraGeoPostgreSQL.model';
 
 
 let dbPostgres: Sequelize;
@@ -64,6 +70,12 @@ const initConnections = async () => {
   CarteraVencidaModel();
   ProgramaModel();
   ObraPostgreSQLModel();
+  ObraGeoPostgreSQLModel();
+  CooperadorPostgreSQLModel();
+  FrentePostgreSQLModel();
+  MovtosFinancPostgreSQLModel();
+  CapitalPagadoPostgreSQLModel();
+  PredioPostgreSQLModel();
 
   console.log("Conexiones inicializadas correctamente.");
 };

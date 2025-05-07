@@ -1,11 +1,11 @@
 // models/Obra.ts
 import { DataTypes } from 'sequelize';
 import { dbPostgres } from '../config/db/connection';
-let Frente:any;
+let FrentePostgreSQL:any;
 
-const FrenteModel = async () => {
+const FrentePostgreSQLModel = async () => {
 
-  Frente = dbPostgres.define('Frente', {
+  FrentePostgreSQL = dbPostgres.define('Frente', {
     fid: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -59,7 +59,7 @@ const FrenteModel = async () => {
     did:{
       type:DataTypes.BIGINT,
     },
-    factor_act_pao:{
+    factor_act_pago:{
       type:DataTypes.DOUBLE
     },
     obr_clv_int:{
@@ -82,6 +82,6 @@ const FrenteModel = async () => {
   
 }
 export{
-  FrenteModel,
-  Frente
+  FrentePostgreSQLModel,
+  FrentePostgreSQL
 }

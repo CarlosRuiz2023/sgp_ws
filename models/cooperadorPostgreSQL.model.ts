@@ -1,11 +1,11 @@
 // models/Obra.ts
 import { DataTypes } from 'sequelize';
 import { dbPostgres } from '../config/db/connection';
-let Cooperador:any;
+let CooperadorPostgreSQL:any;
 
-const CooperadorModel = async () => {
+const CooperadorPostgreSQLModel = async () => {
 
-  Cooperador = dbPostgres.define('Cooperador', {
+  CooperadorPostgreSQL = dbPostgres.define('Cooperador', {
     midcoop: {
       type: DataTypes.BIGINT,
       primaryKey: true,
@@ -79,6 +79,6 @@ const CooperadorModel = async () => {
   
 }
 export{
-  CooperadorModel,
-  Cooperador
+  CooperadorPostgreSQLModel,
+  CooperadorPostgreSQL
 }
