@@ -67,89 +67,91 @@ export class DBsController {
         } else if (obr_stat = 'B') {
           obr_stat = 10;
         }
-        await ObraPostgreSQL.create({
-          obr_clv,
-          obr_cost,
-          obr_status: obr_stat,
-          obr_int: 2,
-          obr_fecha: obr_fecha,
-          obr_sis,
-          obr_digito: 0,
-          obr_prog2: obr_programa,
-          obr_fecinip,
-          obr_fecvenp,
-          obr_npago,
-          obr_opergob,
-          obr_clv_int: Number(obr_clv),
-          oid: 0
-        });
-        console.log(`Se inserto la obra ${obr_clv} en la BD PostgreSQL`);
-        await MovtosFinancPostgreSQL.destroy({ where: { mov_obra_sifidoc: obr_clv } });
-        const cooperadores = await dbAccess.query(`select * from cooperador where coo_obr = '${obra.obr_clv}';`);
-        for (const cooperador of cooperadores) {
-          if (cooperador) {
-            const { coo_clv, coo_pat, coo_mat, coo_nom, coo_num: coo_nof, coo_call, coo_col, coo_cp, coo_tel, coo_mts, coo_pred } = cooperador;
-            const sequencia_cooperadores: any = await dbPostgres.query(`SELECT MAX(midcoop) FROM public2.mcoop;`);
-            const midcoop = Number(sequencia_cooperadores[0][0].max) + 1;
-            await CooperadorPostgreSQL.create({
-              midcoop,
-              mapellidop: coo_pat,
-              mapellidom: coo_mat,
-              mnombres: coo_nom,
-              mcallecoop: coo_call,
-              mcolcoop: coo_col,
-              mcp: coo_cp,
-              mnooficial_ext: coo_nof,
-              mtelcoop: coo_tel,
-              mnomficha: coo_pat + " " + coo_mat + " " + coo_nom,
-              mestado: 'GUANAJUATO',
-              mpais: 'MEXICO',
-              mrelacionpredio: coo_pred != null ? 1 : 0
-            });
-            await CapitalPagadoPostgreSQL.destroy({ where: { coop: coo_clv } });
-            const sequencia_frentes: any = await dbPostgres.query(`SELECT MAX(fid) FROM public2.frentes;`);
-            const fid = Number(sequencia_frentes[0][0].max) + 1;
-            await FrentePostgreSQL.create({
-              fid,
-              mts_frente: coo_mts,
-              coopid: coo_clv.substring(coo_clv.length - 3),
-              pid: midcoop,
-              obra_sifidoc: coo_clv.substring(0, coo_clv.length - 3),
-              feccre: new Date(),
-              usucre: 'admin',
-              obr_clv_int: coo_clv.substring(0, coo_clv.length - 3),
-            });
-            try {
-              const movimientos = await dbAccess.query(`select * from movimientos where mov_clv1 = '${coo_clv}';`);
-              for (const movimiento of movimientos) {
-                if (movimiento) {
-                  const sequencia_movimientos = await dbAccess.query(`select max(id_mov) from movimientos;`);
-                  const { mov_fecha, mov_cap, mov_ndep } = movimiento;
-                  let { id_mov } = sequencia_movimientos;
-                  id_mov = Number(id_mov) + 1;
-                  await MovtosFinancPostgreSQL.create({
-                    mov_obra_sifidoc: coo_clv.substring(0, coo_clv.length - 3),
-                    mov_coop_sifidoc: coo_clv.substring(coo_clv.length - 3),
-                    fec_mov_as400: mov_fecha,
-                    usu_sifidoc: 'admin',
-                    monto_abono_sifidoc: mov_cap,
-                    tipo_mov_sifidoc: 1,
-                    fec_aplic_mov: new Date(),
-                    clave_sifidoc: coo_clv,
-                    fid,
-                    usucre: 'admin',
-                    monto_mov: mov_cap,
-                    id_mov: id_mov,
-                    folio_cajas: mov_ndep,
-                    tipo_mov: 1,
-                    cactivo: 1
-                  });
+        try {
+          await ObraPostgreSQL.create({
+            obr_clv,
+            obr_cost,
+            obr_status: obr_stat,
+            obr_int: 2,
+            obr_fecha: obr_fecha,
+            obr_sis,
+            obr_digito: 0,
+            obr_prog2: obr_programa,
+            obr_fecinip,
+            obr_fecvenp,
+            obr_npago,
+            obr_opergob,
+            obr_clv_int: Number(obr_clv),
+            oid: 0
+          });
+          console.log(`Se inserto la obra ${obr_clv} en la BD PostgreSQL`);
+          await MovtosFinancPostgreSQL.destroy({ where: { mov_obra_sifidoc: obr_clv } });
+          const cooperadores = await dbAccess.query(`select * from cooperador where coo_obr = '${obra.obr_clv}';`);
+          for (const cooperador of cooperadores) {
+            if (cooperador) {
+              const { coo_clv, coo_pat, coo_mat, coo_nom, coo_num: coo_nof, coo_call, coo_col, coo_cp, coo_tel, coo_mts, coo_pred } = cooperador;
+              const sequencia_cooperadores: any = await dbPostgres.query(`SELECT MAX(midcoop) FROM public2.mcoop;`);
+              const midcoop = Number(sequencia_cooperadores[0][0].max) + 1;
+              await CooperadorPostgreSQL.create({
+                midcoop,
+                mapellidop: coo_pat,
+                mapellidom: coo_mat,
+                mnombres: coo_nom,
+                mcallecoop: coo_call,
+                mcolcoop: coo_col,
+                mcp: coo_cp,
+                mnooficial_ext: coo_nof,
+                mtelcoop: coo_tel,
+                mnomficha: coo_pat + " " + coo_mat + " " + coo_nom,
+                mestado: 'GUANAJUATO',
+                mpais: 'MEXICO',
+                mrelacionpredio: coo_pred != null ? 1 : 0
+              });
+              await CapitalPagadoPostgreSQL.destroy({ where: { coop: coo_clv } });
+              const sequencia_frentes: any = await dbPostgres.query(`SELECT MAX(fid) FROM public2.frentes;`);
+              const fid = Number(sequencia_frentes[0][0].max) + 1;
+              await FrentePostgreSQL.create({
+                fid,
+                mts_frente: coo_mts,
+                coopid: coo_clv.substring(coo_clv.length - 3),
+                pid: midcoop,
+                obra_sifidoc: coo_clv.substring(0, coo_clv.length - 3),
+                feccre: new Date(),
+                usucre: 'admin',
+                obr_clv_int: coo_clv.substring(0, coo_clv.length - 3),
+              });
+              try {
+                const movimientos = await dbAccess.query(`select * from movimientos where mov_clv1 = '${coo_clv}';`);
+                for (const movimiento of movimientos) {
+                  if (movimiento) {
+                    const sequencia_movimientos = await dbAccess.query(`select max(id_mov) from movimientos;`);
+                    const { mov_fecha, mov_cap, mov_ndep } = movimiento;
+                    let { id_mov } = sequencia_movimientos;
+                    id_mov = Number(id_mov) + 1;
+                    await MovtosFinancPostgreSQL.create({
+                      mov_obra_sifidoc: coo_clv.substring(0, coo_clv.length - 3),
+                      mov_coop_sifidoc: coo_clv.substring(coo_clv.length - 3),
+                      fec_mov_as400: mov_fecha,
+                      usu_sifidoc: 'admin',
+                      monto_abono_sifidoc: mov_cap,
+                      tipo_mov_sifidoc: 1,
+                      fec_aplic_mov: new Date(),
+                      clave_sifidoc: coo_clv,
+                      fid,
+                      usucre: 'admin',
+                      monto_mov: mov_cap,
+                      id_mov: id_mov,
+                      folio_cajas: mov_ndep,
+                      tipo_mov: 1,
+                      cactivo: 1
+                    });
+                  }
                 }
-              }
-            } catch (error) { }
-            console.log(`Se inserto el cooperador ${coo_clv} en la BD PostgreSQL`);
+              } catch (error) { }
+              console.log(`Se inserto el cooperador ${coo_clv} en la BD PostgreSQL`);
+            }
           }
-        }
+        } catch (error) { }    
       }
     }
     //if(_UtilQuerys.validarRespuestaFindAllSQLServer(obrasPostgreSQL)) return "Respuesta de BD invalida";
