@@ -24,7 +24,7 @@ export default {
   },
   POSTGRESQL: {
     ENVIRONMENT: "LOCAL",
-    HOST: "localhost", 
+    HOST: "localhost",
     PORT: "5432",
     USER_NAME: "postgres",
     USER_PASSWORD: "root",
