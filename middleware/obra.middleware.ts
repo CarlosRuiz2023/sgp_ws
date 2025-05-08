@@ -406,18 +406,6 @@ export class ObraMiddleware {
                 return;
             }
 
-            const estatus = await dbAccess.query(`SELECT * FROM status_obra WHERE sta_clv ='${obr_stat}'`);
-
-            if (estatus == null) {
-                res.status(400).json({
-                    code:400,
-                    success: false,
-                    data: null,
-                    message: "La obr_stat inexistente dentro de la bd",
-                });
-                return;
-            }
-
             next();
 
         } catch (error:any) {

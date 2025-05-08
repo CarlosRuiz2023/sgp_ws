@@ -1,0 +1,3 @@
+[08-05-2025 08:48:21] ERROR: Spawn C:\WINDOWS\System32\cscript.exe error
+[08-05-2025 08:48:40] ERROR: Spawn C:\WINDOWS\System32\cscript.exe error
+[08-05-2025 08:48:59] ERROR: Spawn C:\WINDOWS\System32\cscript.exe error
